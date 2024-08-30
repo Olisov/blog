@@ -1,0 +1,29 @@
+@import '../../index.scss';
+
+.header {
+  padding: 15px 20px;
+  box-sizing: border-box;
+  background-color: $whiteColor;
+  min-height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 156%;
+}
+
+.btn {
+    align-self: stretch;
+    height: 50px;
+    padding: 0 24px;
+    font-size: 18px;
+
+    &-group {
+        display: flex;
+        flex-basis: 240px;
+        justify-content: space-between;
+       
+    }
+}
