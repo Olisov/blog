@@ -1,18 +1,31 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { ConfigProvider } from 'antd'
+import { Provider } from 'react-redux'
 
-import './index.css'
-import App from './App'
-import reportWebVitals from './reportWebVitals'
+import store from './store/store'
+import './index.scss'
+import App from './components/app'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <ConfigProvider
+    theme={{
+      components: {
+        Radio: {
+          fontFamily: 'Open Sans, sans-serif',
+          fontSize: '12px',
+          borderRadius: 4,
+          buttonBg: '#fff',
+          buttonColor: '#4a4a4a',
+          buttonCheckedBg: '#2196F3',
+          colorPrimaryHover: '#000',
+        },
+      },
+    }}
+  >
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </ConfigProvider>
 )
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals()
