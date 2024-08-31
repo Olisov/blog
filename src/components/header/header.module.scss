@@ -1,29 +1,38 @@
-@import '../../index.scss';
+@import '../../index.module.scss';
 
-.header {
-  padding: 15px 20px;
+.body {
+  padding: 15px 24px;
   box-sizing: border-box;
   background-color: $whiteColor;
-  min-height: 80px;
+  // min-height: 85px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  font-weight: 400;
   font-size: 18px;
-  line-height: 156%;
 }
 
-.btn {
-    align-self: stretch;
-    height: 50px;
-    padding: 0 24px;
-    font-size: 18px;
+.link {
+  align-self: stretch;
+  height: 50px;
+  padding: 12px 20px;
+  line-height: 156%;
+  // font-size: 18px;
+  font-weight: 400;
+  box-sizing: border-box;
 
-    &-group {
-        display: flex;
-        flex-basis: 240px;
-        justify-content: space-between;
-       
-    }
+  text-align: center;
+  text-decoration: none;
+  color: $blackColor;
+
+  &:hover {
+    color: $lightGreenColor;
+    border: 1px solid $lightGreenColor;
+    border-radius: 6px;
+  }
+
+  &-group {
+    display: flex;
+    flex-basis: 230px;
+    justify-content: space-between;
+  }
 }

@@ -1,0 +1,16 @@
+@import-normalize;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+$whiteColor: white;
+$mainBgColor: #ebeef3;
+$blueColor: #1890ff;
+$lightGreenColor: #52c41a;
+$redColor: #ff0707;
+$blackColor: rgba(0, 0, 0, 0.85);
+$lightBlackColor: rgba(0, 0, 0, 0.5);
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: lightgray;
+}

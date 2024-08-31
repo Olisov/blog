@@ -1,7 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 
+import { articlesLoadReducer } from './slices'
+
 const store = configureStore({
-  reducer: {},
+  reducer: {
+    articlesLoad: articlesLoadReducer,
+  },
 })
 
 export default store
