@@ -1,3 +1,5 @@
+import { createContext } from 'react'
+
 export function shortenDescription(desc, shortDescSize) {
   if (!desc) return ''
   if (desc.length < shortDescSize) return desc
@@ -6,3 +8,5 @@ export function shortenDescription(desc, shortDescSize) {
 }
 
 export const randomHash = () => Math.random().toString(36).slice(2)
+
+export const appContext = createContext()

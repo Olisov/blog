@@ -1,38 +1,59 @@
-import { React } from 'react'
-import { useSelector } from 'react-redux'
+import { React, useContext, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { Alert, Spin } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 import Markdown from 'react-markdown'
 
+import { savePost, asyncRequestPost, resetPost } from '../../store/slices'
+import { appContext } from '../../utilities'
 import PostHeader from '../post-header'
 
 import stl from './post.module.scss'
 
 function Post() {
+  const apiClientInstance = useContext(appContext)
+  const dispatch = useDispatch()
   const { slug } = useParams()
   const { articles } = useSelector((state) => state.articlesLoad)
+  const { isLoading, error, post } = useSelector((state) => state.postLoad)
 
-  const idx = articles.findIndex((article) => article.slug === slug)
+  useEffect(() => {
+    const idx = articles.findIndex((article) => article.slug === slug)
+    if (idx >= 0) dispatch(savePost(articles[idx]))
+    else dispatch(asyncRequestPost({ apiClientInstance, slug }))
 
-  const article = idx ? articles[idx] : null
-  const { updatedAt, title, author, favoritesCount, favorited, description, tagList, body } = article
-  console.log('article', article)
+    return () => {
+      dispatch(resetPost())
+    }
+  }, [slug])
+
+  const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
+
+  const errorMessage = error && !isLoading ? <Alert message={error} type="error" /> : <div> 404 Page Not Found</div>
+  const content = post ? (
+    <div className={stl.post}>
+      <PostHeader
+        title={post.title}
+        updatedAt={post.updatedAt}
+        author={post.author}
+        favoritesCount={post.favoritesCount}
+        favorited={post.favorited}
+        description={post.description}
+        tagList={post.tagList}
+      />
+      <div>
+        <Markdown>{post.body}</Markdown>
+      </div>
+    </div>
+  ) : (
+    errorMessage
+  )
 
   return (
     <div className={stl.main}>
-      <div className={stl.post}>
-        <PostHeader
-          title={title}
-          updatedAt={updatedAt}
-          author={author}
-          favoritesCount={favoritesCount}
-          favorited={favorited}
-          description={description}
-          tagList={tagList}
-        />
-        <div>
-          <Markdown>{body}</Markdown>
-        </div>
-      </div>
+      {loadingSpinner}
+      {content}
     </div>
   )
 }

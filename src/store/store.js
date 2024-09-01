@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import { articlesLoadReducer } from './slices'
+import { articlesLoadReducer, postLoadReducer } from './slices'
 
 const store = configureStore({
   reducer: {
     articlesLoad: articlesLoadReducer,
+    postLoad: postLoadReducer,
   },
 })
 

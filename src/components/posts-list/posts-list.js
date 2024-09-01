@@ -1,13 +1,12 @@
-import { React, useEffect } from 'react'
+import { React, useEffect, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Pagination, ConfigProvider, Alert, Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
-import { shortenDescription } from '../../utilities'
+import { shortenDescription, appContext } from '../../utilities'
 import PostHeader from '../post-header'
-import ApiClient from '../../api-client'
 import { asyncRequestArticles, pageChange } from '../../store/slices'
 
 import stl from './posts-list.module.scss'
@@ -15,10 +14,9 @@ import stl from './posts-list.module.scss'
 function PostsList() {
   const { page, articles, error, isLoading, totalArticles } = useSelector((state) => state.articlesLoad)
   const dispatch = useDispatch()
-  const apiClientInstance = new ApiClient()
+  const apiClientInstance = useContext(appContext)
 
   const changePage = (newPage) => {
-    // console.log(page)
     dispatch(pageChange(newPage))
   }
 
