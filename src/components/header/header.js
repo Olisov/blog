@@ -6,12 +6,12 @@ import stl from './header.module.scss'
 function Header() {
   return (
     <header className={stl.body}>
-      <span>Realworld blog</span>
+      <span>Realworld Blog</span>
       <div className={stl['link-group']}>
-        <Link to="sign-in-page" className={stl.link}>
+        <Link to="sign-in" className={stl.link}>
           Sign In
         </Link>
-        <Link to="sign-up-page" className={stl.link}>
+        <Link to="sign-up" className={stl.link}>
           Sign Up
         </Link>
       </div>

@@ -21,7 +21,7 @@ function PostsList() {
   }
 
   useEffect(() => {
-    dispatch(asyncRequestArticles({ apiClientInstance, page }))
+    if (!articles.length) dispatch(asyncRequestArticles({ apiClientInstance, page }))
   }, [page])
 
   const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
@@ -72,15 +72,22 @@ function PostsList() {
     : null
 
   return (
-    <main className={stl.main}>
-      {/* <PostHeader />
-      <PostHeader />
-      <PostHeader /> */}
+    // <main className={stl.main}>
+    //   {/* <PostHeader />
+    //   <PostHeader />
+    //   <PostHeader /> */}
+    //   {loadingSpinner}
+    //   {errorMessage}
+    //   {content}
+    //   {pagination}
+    // </main>
+
+    <>
       {loadingSpinner}
       {errorMessage}
       {content}
       {pagination}
-    </main>
+    </>
   )
 }
 

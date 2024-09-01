@@ -51,10 +51,15 @@ function Post() {
   )
 
   return (
-    <div className={stl.main}>
+    // <div className={stl.main}>
+    //   {loadingSpinner}
+    //   {content}
+    // </div>
+
+    <>
       {loadingSpinner}
       {content}
-    </div>
+    </>
   )
 }
 

@@ -9,7 +9,9 @@ function PageLayout() {
   return (
     <div className={stl.wrapper}>
       <Header />
-      <Outlet />
+      <div className={stl.main}>
+        <Outlet />
+      </div>
     </div>
   )
 }

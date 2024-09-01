@@ -4,6 +4,9 @@ import { createBrowserRouter, RouterProvider, BrowserRouter, Routes, Route } fro
 
 import PageLayout from '../page-layout'
 import PostsList from '../posts-list'
+import SignIn from '../sign-in'
+import SignUp from '../sign-up'
+import Profile from '../profile'
 import Post from '../post'
 
 const router = createBrowserRouter([
@@ -18,6 +21,18 @@ const router = createBrowserRouter([
       {
         path: '/articles/:slug',
         element: <Post />,
+      },
+      {
+        path: '/sign-in',
+        element: <SignIn />,
+      },
+      {
+        path: '/sign-Up',
+        element: <SignUp />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
       },
     ],
   },
