@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider, BrowserRouter, Routes, Route } fro
 
 import PageLayout from '../page-layout'
 import PostsList from '../posts-list'
+import Post from '../post'
 
 const router = createBrowserRouter([
   {
@@ -11,8 +12,12 @@ const router = createBrowserRouter([
     element: <PageLayout />,
     children: [
       {
-        path: '/',
+        path: '/articles',
         element: <PostsList />,
+      },
+      {
+        path: '/articles/:slug',
+        element: <Post />,
       },
     ],
   },

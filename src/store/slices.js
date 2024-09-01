@@ -36,7 +36,7 @@ const articlesLoad = createSlice({
     pageChange: (state, action) => ({ ...state, page: action.payload }),
   },
   extraReducers: (builder) => {
-    builder.addCase(asyncRequestArticles.pending, (state) => ({ ...state, isLoading: true })) /// fulfilled rejected
+    builder.addCase(asyncRequestArticles.pending, (state) => ({ ...state, articles: [], isLoading: true })) /// fulfilled rejected
   },
 })
 

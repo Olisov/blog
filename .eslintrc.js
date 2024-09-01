@@ -31,6 +31,7 @@ module.exports = {
     'react/jsx-no-bind': 'off',
     'react/forbid-prop-types': 'off',
     'no-use-before-define': 'off',
+    'react/require-default-props': 'off',
     'no-unused-vars': ['warn'],
     'import/no-unresolved': [2, { caseSensitive: false }],
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],

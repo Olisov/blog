@@ -7,9 +7,9 @@ import { format } from 'date-fns'
 import { shortenDescription, randomHash } from '../../utilities'
 import defaultAva from '../../assets/default-ava.png'
 
-import stl from './post-preview.module.scss'
+import stl from './post-header.module.scss'
 
-function PostPreview({ data }) {
+function PostHeader(props) {
   const {
     author: { username, image = defaultAva },
     favoritesCount,
@@ -18,7 +18,7 @@ function PostPreview({ data }) {
     description,
     tagList,
     title,
-  } = data
+  } = props
 
   function onRate() {
     console.log('like click')
@@ -30,7 +30,8 @@ function PostPreview({ data }) {
   }
 
   return (
-    <section className={stl.body}>
+    // <section className={stl.body}>
+    <div className={stl.body}>
       <div className={stl['left-side']}>
         <div className={stl['title-group']}>
           <div className={stl.title}>{title}</div>
@@ -55,21 +56,28 @@ function PostPreview({ data }) {
             )
           })}
         </div>
-        <div className={stl.text}>{shortenDescription(description, 230)}</div>
+        <div className={stl.text}>{description}</div>
       </div>
       <div className={stl.profile}>
         <div className={stl['profile-label']}>
           <div className={stl.name}>{username}</div>
-          <div className={stl.date}>{format(new Date(updatedAt), 'MMMM d, y')}</div>
+          <div className={stl.date}>{updatedAt ? format(new Date(updatedAt), 'MMMM d, y') : 'No date'}</div>
         </div>
         <img className={stl['profile-img']} alt="Profile" src={image} />
       </div>
-    </section>
+      {/* </section> */}
+    </div>
   )
 }
 
-PostPreview.propTypes = {
-  data: PropTypes.object.isRequired,
+PostHeader.propTypes = {
+  author: PropTypes.object.isRequired,
+  favoritesCount: PropTypes.number.isRequired,
+  favorited: PropTypes.bool.isRequired,
+  updatedAt: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  tagList: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
 }
 
-export default PostPreview
+export default PostHeader

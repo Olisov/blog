@@ -2,8 +2,11 @@ import { React, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Pagination, ConfigProvider, Alert, Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
+import { Link } from 'react-router-dom'
+import classNames from 'classnames'
 
-import PostPreview from '../post-preview'
+import { shortenDescription } from '../../utilities'
+import PostHeader from '../post-header'
 import ApiClient from '../../api-client'
 import { asyncRequestArticles, pageChange } from '../../store/slices'
 
@@ -49,19 +52,32 @@ function PostsList() {
       />
     </ConfigProvider>
   ) : null
+
   const content = articles.length
     ? articles.map((article) => {
-        const { slug, updatedAt } = article
-        // console.log('key', `${slug}_${updatedAt}`)
-        return <PostPreview key={`${slug}_${updatedAt}`} data={article} />
+        const { slug, updatedAt, title, author, favoritesCount, favorited, description, tagList } = article
+        return (
+          <Link to={`/articles/${slug}`} key={`${slug}_${updatedAt}`} className={classNames(stl.link, stl.post)}>
+            {/* // < key={`${slug}_${updatedAt}`} className={stl.post}> */}
+            <PostHeader
+              title={title}
+              updatedAt={updatedAt}
+              author={author}
+              favoritesCount={favoritesCount}
+              favorited={favorited}
+              description={shortenDescription(description, 230)}
+              tagList={tagList}
+            />
+          </Link>
+        )
       })
     : null
 
   return (
     <main className={stl.main}>
-      {/* <PostPreview />
-      <PostPreview />
-      <PostPreview /> */}
+      {/* <PostHeader />
+      <PostHeader />
+      <PostHeader /> */}
       {loadingSpinner}
       {errorMessage}
       {content}
