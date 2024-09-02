@@ -22,9 +22,8 @@ function SignIn() {
       <div className={stl.message}>
         Don’t have an account?{' '}
         <Link to="sign-up" className={stl.link}>
-          Sign Up
+          Sign Up.
         </Link>
-        .
       </div>
     </form>
   )

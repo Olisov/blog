@@ -15,12 +15,12 @@ function Post() {
   const apiClientInstance = useContext(appContext)
   const dispatch = useDispatch()
   const { slug } = useParams()
-  const { articles } = useSelector((state) => state.articlesLoad)
+  const { postsList } = useSelector((state) => state.articlesLoad)
   const { isLoading, error, post } = useSelector((state) => state.postLoad)
 
   useEffect(() => {
-    const idx = articles.findIndex((article) => article.slug === slug)
-    if (idx >= 0) dispatch(savePost(articles[idx]))
+    const idx = postsList.findIndex((article) => article.slug === slug)
+    if (idx >= 0) dispatch(savePost(postsList[idx]))
     else dispatch(asyncRequestPost({ apiClientInstance, slug }))
 
     return () => {

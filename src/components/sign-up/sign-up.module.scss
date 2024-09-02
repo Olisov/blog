@@ -1,0 +1,20 @@
+@import '../sign-in/sign-in.module.scss';
+
+.agree-message {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 157%;
+  color: $textLightGrayColor;
+  border-top: 1px solid $borderGrayColor;
+  margin-top: 6px;
+  margin-bottom: 7px;
+
+  padding: 8px 0;
+}
+
+:global {
+  .ant-wave-target {
+    transform: translateY(-11px);
+  }
+}
+

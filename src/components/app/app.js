@@ -1,6 +1,6 @@
 /* eslint-disable react/self-closing-comp */
 import { React } from 'react'
-import { createBrowserRouter, RouterProvider, BrowserRouter, Routes, Route } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import PageLayout from '../page-layout'
 import PostsList from '../posts-list'

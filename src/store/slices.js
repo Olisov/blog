@@ -1,53 +1,53 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-export const asyncRequestArticles = createAsyncThunk(
-  'articleLoad/requestArticles',
+export const asyncRequestPostsList = createAsyncThunk(
+  'postsListLoad/requestPostsList',
   ({ apiClientInstance, page }, { dispatch }) => {
     apiClientInstance
-      .getArticles(page)
+      .getPostsList(page)
       .then((responseBody) => {
-        dispatch(saveArticles(responseBody))
+        dispatch(savePostsList(responseBody))
       })
-      .catch((getArticlesError) => {
-        dispatch(saveArticlesError(getArticlesError))
+      .catch((getPostsListError) => {
+        dispatch(savePostsListError(getPostsListError))
       })
   }
 )
 
-const articlesLoad = createSlice({
-  name: 'articlesLoad',
+const postsListLoad = createSlice({
+  name: 'postsListLoad',
   initialState: {
     isLoading: false,
     error: null,
-    articles: [],
-    totalArticles: null,
+    postsList: [],
+    totalPosts: null,
     page: 1,
   },
   reducers: {
-    saveArticles: (state, action) => ({
+    savePostsList: (state, action) => ({
       ...state,
       isLoading: false,
-      articles: action.payload.articles,
-      totalArticles: action.payload.articlesCount,
+      postsList: action.payload.articles,
+      totalPosts: action.payload.articlesCount,
     }),
-    saveArticlesError: (state, action) => ({ ...state, isLoading: false, error: action.payload }),
+    savePostsListError: (state, action) => ({ ...state, isLoading: false, error: action.payload }),
     pageChange: (state, action) => ({ ...state, page: action.payload }),
   },
   extraReducers: (builder) => {
-    builder.addCase(asyncRequestArticles.pending, (state) => ({ ...state, articles: [], isLoading: true })) /// fulfilled rejected
+    builder.addCase(asyncRequestPostsList.pending, (state) => ({ ...state, postsList: [], isLoading: true })) /// fulfilled rejected
   },
 })
 
 export const asyncRequestPost = createAsyncThunk(
-  'articleLoad/requestPost',
+  'postLoad/requestPost',
   ({ apiClientInstance, slug }, { dispatch }) => {
     apiClientInstance
       .getPost(slug)
       .then(({ article }) => {
         dispatch(savePost(article))
       })
-      .catch((getArticlesError) => {
-        dispatch(savePostError(getArticlesError.message))
+      .catch((getPostError) => {
+        dispatch(savePostError(getPostError.message))
       })
   }
 )
@@ -69,8 +69,8 @@ const postLoad = createSlice({
   },
 })
 
-export const { saveArticles, saveArticlesError, pageChange } = articlesLoad.actions
-export const articlesLoadReducer = articlesLoad.reducer
+export const { savePostsList, savePostsListError, pageChange } = postsListLoad.actions
+export const articlesLoadReducer = postsListLoad.reducer
 
 export const { savePost, savePostError, resetPost } = postLoad.actions
 export const postLoadReducer = postLoad.reducer

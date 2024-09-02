@@ -7,12 +7,12 @@ import classNames from 'classnames'
 
 import { shortenDescription, appContext } from '../../utilities'
 import PostHeader from '../post-header'
-import { asyncRequestArticles, pageChange } from '../../store/slices'
+import { asyncRequestPostsList, pageChange } from '../../store/slices'
 
 import stl from './posts-list.module.scss'
 
 function PostsList() {
-  const { page, articles, error, isLoading, totalArticles } = useSelector((state) => state.articlesLoad)
+  const { page, postsList, error, isLoading, totalPosts } = useSelector((state) => state.articlesLoad)
   const dispatch = useDispatch()
   const apiClientInstance = useContext(appContext)
 
@@ -21,12 +21,12 @@ function PostsList() {
   }
 
   useEffect(() => {
-    if (!articles.length) dispatch(asyncRequestArticles({ apiClientInstance, page }))
+    dispatch(asyncRequestPostsList({ apiClientInstance, page }))
   }, [page])
 
   const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
   const errorMessage = error ? <Alert message={error} type="error" /> : null
-  const pagination = articles.length ? (
+  const pagination = postsList.length ? (
     <ConfigProvider
       theme={{
         components: {
@@ -46,13 +46,13 @@ function PostsList() {
         defaultPageSize="5"
         onChange={changePage}
         showSizeChanger={false}
-        total={totalArticles}
+        total={totalPosts}
       />
     </ConfigProvider>
   ) : null
 
-  const content = articles.length
-    ? articles.map((article) => {
+  const content = postsList.length
+    ? postsList.map((article) => {
         const { slug, updatedAt, title, author, favoritesCount, favorited, description, tagList } = article
         return (
           <Link to={`/articles/${slug}`} key={`${slug}_${updatedAt}`} className={classNames(stl.link, stl.post)}>
