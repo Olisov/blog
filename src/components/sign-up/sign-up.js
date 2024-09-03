@@ -12,6 +12,11 @@ import { appContext } from '../../utilities'
 
 import stl from './sign-up.module.scss'
 
+// function faultMessage(faultText) {
+//   if (faultText) return <div className={stl['incorrect-message']}>{faultText}</div>
+//   return null
+// }
+
 function SignUp() {
   const apiClientInstance = useContext(appContext)
   const dispatch = useDispatch()
@@ -22,7 +27,17 @@ function SignUp() {
     handleSubmit,
     reset,
     getValues,
-  } = useForm({ mode: 'onBlur' })
+  } = useForm({
+    mode: 'onBlur',
+    defaultValues: {
+      username: 'Ollsll',
+      email: 'fadvbfa@.mail.com',
+      password: 'Ollsll12',
+      'password-conform': 'Ollsll12',
+    },
+  })
+
+  // const userNameFault = errors.username
 
   // apiClientInstance.createNewUser({ username: 'Ollsll', email: 'fadvbfa@.mail.com', password: 'Ollsll12' })
 
@@ -30,9 +45,9 @@ function SignUp() {
   //   console.log(`checked = ${e.target.checked}`)
   // }
 
-  const onSubmit = (formData) => {
+  const onSubmit = ({ username, email, password }) => {
     // evt.preventDefault()
-    console.log('evt.target', formData)
+    // console.log('evt.target', formData)
 
     // dispatch(
     //   asyncCreateUserRequest({
@@ -44,10 +59,25 @@ function SignUp() {
     //     },
     //   })
     // )
+    dispatch(
+      asyncCreateUserRequest({
+        apiClientInstance,
+        regData: {
+          username,
+          email,
+          password,
+        },
+      })
+    )
     // apiClientInstance.createNewUser({ username: 'Ollsll', email: 'fadvbfa@.mail.com', password: 'Ollsll12' })
+    // apiClientInstance.createNewUser({ username, email, password })
   }
 
-  // console.log('authErrorsList', authErrorsList)
+  console.log('authErrorsList', authErrorsList)
+
+  if (authErrorsList.username) errors.username = { message: authErrorsList.username }
+  if (authErrorsList.email) errors.email = { message: authErrorsList.email }
+  if (authErrorsList.password) errors.password = { message: authErrorsList.password }
 
   console.log('errors', errors)
 
@@ -62,9 +92,10 @@ function SignUp() {
       <div className={stl['input-group']}>
         <div className={stl['input-label']}>Username</div>
         {/* <input className={stl.input} name="username" type="text" placeholder="Username" /> */}
+        {/* stl['incorrect-input']  */}
         <input
           // className={stl.input}
-          className={classNames(stl.input, stl['incorrect-input'])}
+          className={errors.username ? classNames(stl.input, stl['incorrect-input']) : classNames(stl.input)}
           type="text"
           {...register('username', {
             required: 'This field is required!',
@@ -80,7 +111,8 @@ function SignUp() {
           placeholder="Username"
         />
         {/* <div className={stl.message}>{errors.username?.message}</div> */}
-        <div className={stl['incorrect-message']}>Minimum length 5 characters</div>
+        {/* <div className={stl['incorrect-message']}>Minimum length 5 characters</div> */}
+        {errors.username ? <div className={stl['incorrect-message']}>{errors.username.message}</div> : null}
       </div>
       <div className={stl['input-group']}>
         <div className={stl['input-label']}>Email address</div>
