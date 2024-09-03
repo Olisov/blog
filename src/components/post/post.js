@@ -16,7 +16,7 @@ function Post() {
   const dispatch = useDispatch()
   const { slug } = useParams()
   const { postsList } = useSelector((state) => state.articlesLoad)
-  const { isLoading, error, post } = useSelector((state) => state.postLoad)
+  const { isLoading, error, post } = useSelector((state) => state.postLoadState)
 
   useEffect(() => {
     const idx = postsList.findIndex((article) => article.slug === slug)
@@ -30,7 +30,8 @@ function Post() {
 
   const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
 
-  const errorMessage = error && !isLoading ? <Alert message={error} type="error" /> : <div> 404 Page Not Found</div>
+  const errorMessage =
+    error && !isLoading ? <Alert message={error} type="error" banner /> : <div> 404 Page Not Found</div>
   const content = post ? (
     <div className={stl.post}>
       <PostHeader

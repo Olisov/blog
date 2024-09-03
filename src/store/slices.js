@@ -1,21 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-export const asyncRequestPostsList = createAsyncThunk(
-  'postsListLoad/requestPostsList',
-  ({ apiClientInstance, page }, { dispatch }) => {
-    apiClientInstance
-      .getPostsList(page)
-      .then((responseBody) => {
-        dispatch(savePostsList(responseBody))
-      })
-      .catch((getPostsListError) => {
-        dispatch(savePostsListError(getPostsListError))
-      })
-  }
-)
-
-const postsListLoad = createSlice({
-  name: 'postsListLoad',
+const postsListLoadState = createSlice({
+  name: 'postsListLoadState',
   initialState: {
     isLoading: false,
     error: null,
@@ -38,22 +24,8 @@ const postsListLoad = createSlice({
   },
 })
 
-export const asyncRequestPost = createAsyncThunk(
-  'postLoad/requestPost',
-  ({ apiClientInstance, slug }, { dispatch }) => {
-    apiClientInstance
-      .getPost(slug)
-      .then(({ article }) => {
-        dispatch(savePost(article))
-      })
-      .catch((getPostError) => {
-        dispatch(savePostError(getPostError.message))
-      })
-  }
-)
-
-const postLoad = createSlice({
-  name: 'postLoad',
+const postLoadState = createSlice({
+  name: 'postLoadState',
   initialState: {
     isLoading: false,
     error: null,
@@ -69,8 +41,106 @@ const postLoad = createSlice({
   },
 })
 
-export const { savePostsList, savePostsListError, pageChange } = postsListLoad.actions
-export const articlesLoadReducer = postsListLoad.reducer
+const authState = createSlice({
+  name: 'authState',
+  initialState: {
+    userName: null,
+    email: null,
+    tokenJWT: null,
+    isLoading: false,
+    createUserRequestError: null,
+    authErrorsList: {},
+  },
+  reducers: {
+    saveUserAuthData: (state, action) => ({
+      ...state,
+      isLoading: false,
+      userName: action.payload.username,
+      email: action.payload.email,
+      tokenJWT: action.payload.token,
+    }),
+    saveAuthErrorsList: (state, action) => ({ ...state, isLoading: false, authErrorsList: action.payload }),
+    saveCreateUserRequestError: (state, action) => ({
+      ...state,
+      isLoading: false,
+      createUserRequestError: action.payload,
+    }),
+  },
+  extraReducers: (builder) => {
+    builder.addCase(asyncCreateUserRequest.pending, (state) => ({
+      ...state,
+      isLoading: true,
+      createUserRequestError: null,
+      authErrorsList: {},
+    }))
+  },
+})
 
-export const { savePost, savePostError, resetPost } = postLoad.actions
-export const postLoadReducer = postLoad.reducer
+export const asyncRequestPostsList = createAsyncThunk(
+  'postsListLoadState/requestPostsList',
+  ({ apiClientInstance, page }, { dispatch }) => {
+    apiClientInstance
+      .getPostsList(page)
+      .then((responseBody) => {
+        dispatch(savePostsList(responseBody))
+      })
+      .catch((getPostsListError) => {
+        dispatch(savePostsListError(getPostsListError))
+      })
+  }
+)
+
+export const asyncRequestPost = createAsyncThunk(
+  'postLoadState/requestPost',
+  ({ apiClientInstance, slug }, { dispatch }) => {
+    apiClientInstance
+      .getPost(slug)
+      .then(({ article }) => {
+        dispatch(savePost(article))
+      })
+      .catch((getPostError) => {
+        dispatch(savePostError(getPostError.message))
+      })
+  }
+)
+
+export const asyncCreateUserRequest = createAsyncThunk(
+  'authState/createUserRequest',
+  ({ apiClientInstance, regData }, { dispatch }) => {
+    apiClientInstance
+      .createNewUser(regData)
+      .then((response) => {
+        if (response.user) {
+          dispatch(saveUserAuthData(response.user))
+        } else {
+          dispatch(saveAuthErrorsList(response.errors))
+        }
+      })
+      .catch((requestError) => {
+        dispatch(saveCreateUserRequestError(requestError.message))
+      })
+  }
+)
+
+// export const asyncLogInRequest = createAsyncThunk(
+//   'authState/logInRequest',
+//   ({ apiClientInstance, slug }, { dispatch }) => {
+//     apiClientInstance
+//       .getPost(slug)
+//       .then(({ article }) => {
+//         dispatch(savePost(article))
+//       })
+//       .catch((getPostError) => {
+//         dispatch(savePostError(getPostError.message))
+//       })
+//   }
+// )
+
+export const { savePostsList, savePostsListError, pageChange } = postsListLoadState.actions
+export const postsListLoadStateReducer = postsListLoadState.reducer
+
+export const { savePost, savePostError, resetPost } = postLoadState.actions
+export const postLoadReducer = postLoadState.reducer
+
+export const { saveUserAuthData, saveAuthErrorsList, saveCreateUserRequestError } = authState.actions
+export const authStateReducer = authState.reducer

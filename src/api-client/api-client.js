@@ -54,16 +54,13 @@ export default class ApiClient {
       user: { username, email, password },
     })
 
-    // console.log('optionsPost.body', optionsPost.body)
     const serverResponse = await fetch(targetUrl, optionsPost)
 
     if (!serverResponse.ok && serverResponse.status !== 422) {
+      console.log('serverResponse.status', serverResponse.status)
       throw new Error(`Server failure, received ${serverResponse.status}`)
     }
     const serverResponseBody = await serverResponse.json()
-
-    // console.log('serverResponseBody', serverResponseBody)
-
     return serverResponseBody
   }
 }

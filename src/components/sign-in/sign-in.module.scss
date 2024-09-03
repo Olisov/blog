@@ -35,12 +35,16 @@
   font-weight: 400;
   font-size: 16px;
   line-height: 150%;
-  color: $textWhiteColor;
+
   box-sizing: border-box;
   width: 100%;
   //   width: 320px;
   height: 40px;
   padding: 0 8px;
+
+  &::placeholder {
+    color: $textWhiteColor;
+  }
 
   &-group {
     width: 100%;
@@ -54,16 +58,17 @@
   }
 }
 
+
 .submit-btn {
   margin-top: 6px;
   border-radius: 4px;
   padding: 8px 16px;
-//   width: 319px;
+  //   width: 319px;
   height: 40px;
   margin-bottom: 8px;
 }
 
-.message {
+.prompt {
   font-weight: 400;
   font-size: 12px;
   line-height: 167%;
@@ -74,4 +79,32 @@
 .link {
   color: $blueColor;
   text-decoration: none;
+}
+
+
+.agree-request {
+  border-top: 1px solid $borderGrayColor;
+}
+
+// .message {
+//   font-weight: 500;
+//   font-size: 20px;
+//   line-height: 140%;
+//   text-align: center;
+//   color: $textGrayColor;
+// }
+
+.incorrect-input {
+  border: 2px solid $redColor;
+  border-radius: 6px;
+}
+
+.incorrect-message {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 157%;
+  color: $redColor;
+  padding: 2px 0;
+
+  align-self: flex-start;
 }
