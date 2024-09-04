@@ -1,7 +1,9 @@
 /* eslint-disable react/self-closing-comp */
-import { React } from 'react'
+import { React, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
+import { saveUserAuthData } from '../../store/slices'
 import PageLayout from '../page-layout'
 import PostsList from '../posts-list'
 import SignIn from '../sign-in'
@@ -39,6 +41,25 @@ const router = createBrowserRouter([
 ])
 
 function App() {
+  const { tokenJWT } = useSelector((state) => state.authState)
+  const dispatch = useDispatch()
+
+  const savedUserName = localStorage.getItem('userName')
+  const savedEmail = localStorage.getItem('email')
+  const savedTokenJWT = localStorage.getItem('tokenJWT')
+
+  useEffect(() => {
+    if (savedTokenJWT && !tokenJWT) {
+      dispatch(
+        saveUserAuthData({
+          userName: savedUserName,
+          email: savedEmail,
+          tokenJWT: savedTokenJWT,
+        })
+      )
+    }
+  }, [])
+
   return <RouterProvider router={router} />
 }
 

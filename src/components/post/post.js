@@ -15,7 +15,7 @@ function Post() {
   const apiClientInstance = useContext(appContext)
   const dispatch = useDispatch()
   const { slug } = useParams()
-  const { postsList } = useSelector((state) => state.articlesLoad)
+  const { postsList } = useSelector((state) => state.postsListLoadState)
   const { isLoading, error, post } = useSelector((state) => state.postLoadState)
 
   useEffect(() => {
@@ -52,11 +52,6 @@ function Post() {
   )
 
   return (
-    // <div className={stl.main}>
-    //   {loadingSpinner}
-    //   {content}
-    // </div>
-
     <>
       {loadingSpinner}
       {content}

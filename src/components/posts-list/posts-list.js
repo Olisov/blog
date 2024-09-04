@@ -12,7 +12,7 @@ import { asyncRequestPostsList, pageChange } from '../../store/slices'
 import stl from './posts-list.module.scss'
 
 function PostsList() {
-  const { page, postsList, error, isLoading, totalPosts } = useSelector((state) => state.articlesLoad)
+  const { page, postsList, error, isLoading, totalPosts } = useSelector((state) => state.postsListLoadState)
   const dispatch = useDispatch()
   const apiClientInstance = useContext(appContext)
 

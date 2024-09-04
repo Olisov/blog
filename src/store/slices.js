@@ -65,6 +65,7 @@ const authState = createSlice({
       isLoading: false,
       createUserRequestError: action.payload,
     }),
+    resetAuthErrorsList: (state, action) => ({ ...state, authErrorsList: {} }),
   },
   extraReducers: (builder) => {
     builder.addCase(asyncCreateUserRequest.pending, (state) => ({
@@ -142,5 +143,6 @@ export const postsListLoadStateReducer = postsListLoadState.reducer
 export const { savePost, savePostError, resetPost } = postLoadState.actions
 export const postLoadReducer = postLoadState.reducer
 
-export const { saveUserAuthData, saveAuthErrorsList, saveCreateUserRequestError } = authState.actions
+export const { saveUserAuthData, saveAuthErrorsList, saveCreateUserRequestError, resetAuthErrorsList } =
+  authState.actions
 export const authStateReducer = authState.reducer
