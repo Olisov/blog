@@ -4,7 +4,7 @@ import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import PropTypes from 'prop-types'
 import { format } from 'date-fns'
 
-import { shortenDescription, randomHash } from '../../utilities'
+import { randomHash } from '../../utilities'
 import defaultAva from '../../assets/default-ava.png'
 
 import stl from './post-header.module.scss'
@@ -21,7 +21,7 @@ function PostHeader(props) {
   } = props
 
   function onRate() {
-    console.log('like click')
+    // console.log('like click')
   }
 
   const customIcons = {

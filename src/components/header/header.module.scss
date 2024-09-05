@@ -12,13 +12,14 @@
 }
 
 .link {
-  align-self: stretch;
-  height: 50px;
+  // align-self: stretch;
+  min-height: 50px;
   padding: 12px 20px;
   line-height: 156%;
   // font-size: 18px;
   font-weight: 400;
   box-sizing: border-box;
+  align-items: center;
 
   text-align: center;
   text-decoration: none;
@@ -32,7 +33,33 @@
 
   &-group {
     display: flex;
-    flex-basis: 230px;
+    // flex-basis: 230px;
     justify-content: space-between;
+    align-items: center;
+    column-gap: 16px;
   }
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  column-gap: 15px;
+
+  &-name {
+    text-align: center;
+    text-decoration: none;
+    color: $blackColor;
+  }
+}
+
+.create-btn {
+  // font-family: 'Inter UI', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 157%;
+  color: $lightGreenColor;
+  border: 1px solid $lightGreenColor;
+  border-radius: 3px;
+  padding: 5px 10px;
+  text-decoration: none;
 }

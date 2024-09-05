@@ -47,6 +47,7 @@ const authState = createSlice({
     userName: null,
     email: null,
     tokenJWT: null,
+    userImg: null,
     isLoading: false,
     authRequestError: null,
     authErrorsList: {},
@@ -58,7 +59,9 @@ const authState = createSlice({
       userName: action.payload.username,
       email: action.payload.email,
       tokenJWT: action.payload.token,
+      userImg: action.payload.image,
     }),
+    resetUserAuthData: (state) => ({ ...state, userName: null, email: null, tokenJWT: null }),
     saveAuthErrorsList: (state, action) => ({ ...state, isLoading: false, authErrorsList: action.payload }),
     saveAuthRequestError: (state, action) => ({
       ...state,
@@ -130,5 +133,6 @@ export const postsListLoadStateReducer = postsListLoadState.reducer
 export const { savePost, savePostError, resetPost } = postLoadState.actions
 export const postLoadReducer = postLoadState.reducer
 
-export const { saveUserAuthData, saveAuthErrorsList, saveAuthRequestError, resetAuthErrorsList } = authState.actions
+export const { saveUserAuthData, saveAuthErrorsList, saveAuthRequestError, resetUserAuthData, resetAuthErrorsList } =
+  authState.actions
 export const authStateReducer = authState.reducer
