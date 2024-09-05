@@ -37,7 +37,7 @@ const postLoadState = createSlice({
     resetPost: () => ({ isLoading: false, error: null, post: null }),
   },
   extraReducers: (builder) => {
-    builder.addCase(asyncRequestPost.pending, (state) => ({ ...state, post: null, isLoading: true })) /// fulfilled rejected
+    builder.addCase(asyncRequestPost.pending, (state) => ({ ...state, post: null, isLoading: true }))
   },
 })
 
@@ -48,7 +48,7 @@ const authState = createSlice({
     email: null,
     tokenJWT: null,
     isLoading: false,
-    createUserRequestError: null,
+    authRequestError: null,
     authErrorsList: {},
   },
   reducers: {
@@ -60,18 +60,18 @@ const authState = createSlice({
       tokenJWT: action.payload.token,
     }),
     saveAuthErrorsList: (state, action) => ({ ...state, isLoading: false, authErrorsList: action.payload }),
-    saveCreateUserRequestError: (state, action) => ({
+    saveAuthRequestError: (state, action) => ({
       ...state,
       isLoading: false,
-      createUserRequestError: action.payload,
+      authRequestError: action.payload,
     }),
-    resetAuthErrorsList: (state, action) => ({ ...state, authErrorsList: {} }),
+    resetAuthErrorsList: (state) => ({ ...state, authErrorsList: {} }),
   },
   extraReducers: (builder) => {
-    builder.addCase(asyncCreateUserRequest.pending, (state) => ({
+    builder.addCase(asyncAuthRequest.pending, (state) => ({
       ...state,
       isLoading: true,
-      createUserRequestError: null,
+      authRequestError: null,
       authErrorsList: {},
     }))
   },
@@ -105,11 +105,12 @@ export const asyncRequestPost = createAsyncThunk(
   }
 )
 
-export const asyncCreateUserRequest = createAsyncThunk(
-  'authState/createUserRequest',
+export const asyncAuthRequest = createAsyncThunk(
+  'authState/authRequest',
   ({ apiClientInstance, regData }, { dispatch }) => {
     apiClientInstance
-      .createNewUser(regData)
+
+      .userAuth(regData)
       .then((response) => {
         if (response.user) {
           dispatch(saveUserAuthData(response.user))
@@ -118,24 +119,10 @@ export const asyncCreateUserRequest = createAsyncThunk(
         }
       })
       .catch((requestError) => {
-        dispatch(saveCreateUserRequestError(requestError.message))
+        dispatch(saveAuthRequestError(requestError.message))
       })
   }
 )
-
-// export const asyncLogInRequest = createAsyncThunk(
-//   'authState/logInRequest',
-//   ({ apiClientInstance, slug }, { dispatch }) => {
-//     apiClientInstance
-//       .getPost(slug)
-//       .then(({ article }) => {
-//         dispatch(savePost(article))
-//       })
-//       .catch((getPostError) => {
-//         dispatch(savePostError(getPostError.message))
-//       })
-//   }
-// )
 
 export const { savePostsList, savePostsListError, pageChange } = postsListLoadState.actions
 export const postsListLoadStateReducer = postsListLoadState.reducer
@@ -143,6 +130,5 @@ export const postsListLoadStateReducer = postsListLoadState.reducer
 export const { savePost, savePostError, resetPost } = postLoadState.actions
 export const postLoadReducer = postLoadState.reducer
 
-export const { saveUserAuthData, saveAuthErrorsList, saveCreateUserRequestError, resetAuthErrorsList } =
-  authState.actions
+export const { saveUserAuthData, saveAuthErrorsList, saveAuthRequestError, resetAuthErrorsList } = authState.actions
 export const authStateReducer = authState.reducer

@@ -1,13 +1,12 @@
-/* eslint-disable no-unused-expressions */
 import { React, useContext, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Button, Checkbox, Alert, Spin, message } from 'antd'
+import { Button, Checkbox, Alert, Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { Link, Navigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import classNames from 'classnames'
 
-import { asyncCreateUserRequest, resetAuthErrorsList } from '../../store/slices'
+import { asyncAuthRequest, resetAuthErrorsList } from '../../store/slices'
 import { appContext } from '../../utilities'
 
 import stl from './sign-up.module.scss'
@@ -15,7 +14,7 @@ import stl from './sign-up.module.scss'
 function SignUp() {
   const apiClientInstance = useContext(appContext)
   const dispatch = useDispatch()
-  const { isLoading, authErrorsList, createUserRequestError, userName, email, tokenJWT } = useSelector(
+  const { isLoading, authErrorsList, authRequestError, userName, email, tokenJWT } = useSelector(
     (state) => state.authState
   )
   const {
@@ -37,9 +36,10 @@ function SignUp() {
 
   const onSubmit = (formData) => {
     dispatch(
-      asyncCreateUserRequest({
+      asyncAuthRequest({
         apiClientInstance,
         regData: {
+          authType: 'create',
           username: formData.username,
           email: formData.email,
           password: formData.password,
@@ -63,11 +63,11 @@ function SignUp() {
   if (authErrorsList.password) errors.password = { message: authErrorsList.password }
 
   const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
-  const errorMessage =
-    createUserRequestError && !isLoading ? <Alert message={createUserRequestError} banner type="error" /> : null
+  const errorMessage = authRequestError && !isLoading ? <Alert message={authRequestError} banner type="error" /> : null
 
   return (
     <form className={stl.body} onSubmit={handleSubmit(onSubmit)}>
+      {tokenJWT ? <Navigate to="/" replace /> : null}
       <div className={stl.title}>Create new account</div>
       <div className={stl['input-group']}>
         <div className={stl['input-label']}>Username</div>
@@ -154,7 +154,6 @@ function SignUp() {
           Sign In
         </Link>
       </div>
-      {tokenJWT ? <Navigate to="/articles" replace /> : null}
     </form>
   )
 }

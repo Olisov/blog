@@ -30,7 +30,6 @@ export default class ApiClient {
       throw new Error(`Server failure, received ${serverResponse.status}`)
     }
     const serverResponseBody = await serverResponse.json()
-
     return serverResponseBody
   }
 
@@ -43,21 +42,24 @@ export default class ApiClient {
       throw new Error(`Server failure, received ${serverResponse.status}`)
     }
     const serverResponseBody = await serverResponse.json()
-
     return serverResponseBody
   }
 
-  async createNewUser({ username, email, password }) {
+  async userAuth({ username, email, password, authType }) {
     const { baseUrl, optionsPost } = this.storage
-    const targetUrl = new URL('/api/users', baseUrl)
-    optionsPost.body = JSON.stringify({
-      user: { username, email, password },
-    })
+    const targetUrl = authType === 'create' ? new URL('/api/users', baseUrl) : new URL('/api/users/login', baseUrl)
+    optionsPost.body =
+      authType === 'create'
+        ? JSON.stringify({
+            user: { username, email, password },
+          })
+        : JSON.stringify({
+            user: { email, password },
+          })
 
     const serverResponse = await fetch(targetUrl, optionsPost)
 
     if (!serverResponse.ok && serverResponse.status !== 422) {
-      console.log('serverResponse.status', serverResponse.status)
       throw new Error(`Server failure, received ${serverResponse.status}`)
     }
     const serverResponseBody = await serverResponse.json()

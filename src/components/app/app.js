@@ -52,9 +52,9 @@ function App() {
     if (savedTokenJWT && !tokenJWT) {
       dispatch(
         saveUserAuthData({
-          userName: savedUserName,
+          username: savedUserName,
           email: savedEmail,
-          tokenJWT: savedTokenJWT,
+          token: savedTokenJWT,
         })
       )
     }
