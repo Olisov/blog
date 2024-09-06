@@ -47,7 +47,7 @@ const authState = createSlice({
     userName: null,
     email: null,
     tokenJWT: null,
-    userImg: null,
+    avatarImg: null,
     isLoading: false,
     authRequestError: null,
     authErrorsList: {},
@@ -59,7 +59,7 @@ const authState = createSlice({
       userName: action.payload.username,
       email: action.payload.email,
       tokenJWT: action.payload.token,
-      userImg: action.payload.image,
+      avatarImg: action.payload.image,
     }),
     resetUserAuthData: (state) => ({ ...state, userName: null, email: null, tokenJWT: null }),
     saveAuthErrorsList: (state, action) => ({ ...state, isLoading: false, authErrorsList: action.payload }),
@@ -71,20 +71,27 @@ const authState = createSlice({
     resetAuthErrorsList: (state) => ({ ...state, authErrorsList: {} }),
   },
   extraReducers: (builder) => {
-    builder.addCase(asyncAuthRequest.pending, (state) => ({
-      ...state,
-      isLoading: true,
-      authRequestError: null,
-      authErrorsList: {},
-    }))
+    builder
+      .addCase(asyncAuthRequest.pending, (state) => ({
+        ...state,
+        isLoading: true,
+        authRequestError: null,
+        authErrorsList: {},
+      }))
+      .addCase(asyncUpdateUserAuthRequest.pending, (state) => ({
+        ...state,
+        isLoading: true,
+        authRequestError: null,
+        authErrorsList: {},
+      }))
   },
 })
 
 export const asyncRequestPostsList = createAsyncThunk(
   'postsListLoadState/requestPostsList',
-  ({ apiClientInstance, page }, { dispatch }) => {
+  ({ apiClientInstance, page, tokenJWT }, { dispatch }) => {
     apiClientInstance
-      .getPostsList(page)
+      .getPostsList({ page, tokenJWT })
       .then((responseBody) => {
         dispatch(savePostsList(responseBody))
       })
@@ -112,7 +119,6 @@ export const asyncAuthRequest = createAsyncThunk(
   'authState/authRequest',
   ({ apiClientInstance, regData }, { dispatch }) => {
     apiClientInstance
-
       .userAuth(regData)
       .then((response) => {
         if (response.user) {
@@ -120,6 +126,20 @@ export const asyncAuthRequest = createAsyncThunk(
         } else {
           dispatch(saveAuthErrorsList(response.errors))
         }
+      })
+      .catch((requestError) => {
+        dispatch(saveAuthRequestError(requestError.message))
+      })
+  }
+)
+
+export const asyncUpdateUserAuthRequest = createAsyncThunk(
+  'authState/updateUserAuthRequest',
+  ({ apiClientInstance, regData }, { dispatch }) => {
+    apiClientInstance
+      .updateUserAuth(regData)
+      .then((response) => {
+        dispatch(saveUserAuthData(response.user))
       })
       .catch((requestError) => {
         dispatch(saveAuthRequestError(requestError.message))

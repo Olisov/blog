@@ -14,7 +14,7 @@ import stl from './sign-up.module.scss'
 function SignUp() {
   const apiClientInstance = useContext(appContext)
   const dispatch = useDispatch()
-  const { isLoading, authErrorsList, authRequestError, userName, email, tokenJWT } = useSelector(
+  const { isLoading, authErrorsList, authRequestError, userName, email, tokenJWT, avatarImg } = useSelector(
     (state) => state.authState
   )
   const {
@@ -54,9 +54,12 @@ function SignUp() {
       localStorage.setItem('userName', userName)
       localStorage.setItem('email', email)
       localStorage.setItem('tokenJWT', tokenJWT)
+      localStorage.setItem('avatarImg', avatarImg)
       reset()
     }
   }, [authErrorsList, tokenJWT])
+
+  if (tokenJWT) return <Navigate to="/" replace />
 
   if (authErrorsList.username) errors.username = { message: authErrorsList.username }
   if (authErrorsList.email) errors.email = { message: authErrorsList.email }
@@ -67,7 +70,7 @@ function SignUp() {
 
   return (
     <form className={stl.body} onSubmit={handleSubmit(onSubmit)}>
-      {tokenJWT ? <Navigate to="/" replace /> : null}
+      {/* {tokenJWT ? <Navigate to="/" replace /> : null} */}
       <div className={stl.title}>Create new account</div>
       <div className={stl['input-group']}>
         <div className={stl['input-label']}>Username</div>

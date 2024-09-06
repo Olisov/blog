@@ -13,7 +13,7 @@ import stl from './sign-in.module.scss'
 
 function SignIn() {
   const apiClientInstance = useContext(appContext)
-  const { isLoading, authErrorsList, authRequestError, userName, email, tokenJWT } = useSelector(
+  const { isLoading, authErrorsList, authRequestError, userName, email, tokenJWT, avatarImg } = useSelector(
     (state) => state.authState
   )
   const dispatch = useDispatch()
@@ -42,9 +42,12 @@ function SignIn() {
       localStorage.setItem('userName', userName)
       localStorage.setItem('email', email)
       localStorage.setItem('tokenJWT', tokenJWT)
+      localStorage.setItem('avatarImg', avatarImg)
       reset()
     }
   }, [authErrorsList, tokenJWT])
+
+  if (tokenJWT) return <Navigate to="/" replace />
 
   if (authErrorsList.email) errors.email = { message: authErrorsList.email }
   if (authErrorsList.password) errors.password = { message: authErrorsList.password }
@@ -58,7 +61,7 @@ function SignIn() {
 
   return (
     <form className={stl.body} onSubmit={handleSubmit(onSubmit)}>
-      {tokenJWT ? <Navigate to="/" replace /> : null}
+      {/* {tokenJWT ? <Navigate to="/" replace /> : null} */}
       <div className={stl.title}>Sign In</div>
       <div className={stl['input-group']}>
         <div className={stl['input-label']}>Email address</div>

@@ -9,13 +9,15 @@ import defaultAva from '../../assets/default-ava.png'
 import stl from './header.module.scss'
 
 function Header() {
-  const { userName, tokenJWT, userImg = defaultAva } = useSelector((state) => state.authState)
+  const { userName, tokenJWT, avatarImg = defaultAva } = useSelector((state) => state.authState)
   const dispatch = useDispatch()
 
   function onLogOut() {
     localStorage.removeItem('userName')
     localStorage.removeItem('email')
     localStorage.removeItem('tokenJWT')
+    localStorage.removeItem('avatarImg')
+    // localStorage.removeItem('userAuth')
 
     dispatch(resetUserAuthData())
   }
@@ -36,7 +38,7 @@ function Header() {
       </Link>
       <Link to="/profile" className={stl.profile}>
         <span className={stl['profile-name']}>{userName}</span>
-        <img className={stl['profile-img']} alt="Profile" src={userImg} />
+        <img className={stl['profile-img']} alt="Profile" src={avatarImg} />
       </Link>
       <Button className={stl.link} onClick={onLogOut}>
         Log Out

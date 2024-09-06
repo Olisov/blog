@@ -50,6 +50,12 @@
     text-decoration: none;
     color: $blackColor;
   }
+
+  &-img{
+    max-width: 46px;
+    max-height: 46px;
+    border-radius: 50%;
+  }
 }
 
 .create-btn {

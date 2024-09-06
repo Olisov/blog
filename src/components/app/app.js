@@ -47,6 +47,7 @@ function App() {
   const savedUserName = localStorage.getItem('userName')
   const savedEmail = localStorage.getItem('email')
   const savedTokenJWT = localStorage.getItem('tokenJWT')
+  const savedAvatarImg = localStorage.getItem('avatarImg')
 
   useEffect(() => {
     if (savedTokenJWT && !tokenJWT) {
@@ -55,6 +56,7 @@ function App() {
           username: savedUserName,
           email: savedEmail,
           token: savedTokenJWT,
+          image: savedAvatarImg,
         })
       )
     }

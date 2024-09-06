@@ -2,7 +2,7 @@ import { React, useEffect, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Pagination, ConfigProvider, Alert, Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import classNames from 'classnames'
 
 import { shortenDescription, appContext } from '../../utilities'
@@ -13,16 +13,22 @@ import stl from './posts-list.module.scss'
 
 function PostsList() {
   const { page, postsList, error, isLoading, totalPosts } = useSelector((state) => state.postsListLoadState)
+  const { tokenJWT } = useSelector((state) => state.authState)
   const dispatch = useDispatch()
   const apiClientInstance = useContext(appContext)
+  const navigate = useNavigate()
 
   const changePage = (newPage) => {
     dispatch(pageChange(newPage))
   }
 
   useEffect(() => {
-    dispatch(asyncRequestPostsList({ apiClientInstance, page }))
+    dispatch(asyncRequestPostsList({ apiClientInstance, page, tokenJWT }))
   }, [page])
+
+  function onClick(evt, slug) {
+    if (evt.target.nodeName !== 'path') navigate(`/articles/${slug}`)
+  }
 
   const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
   const errorMessage = error ? <Alert message={error} type="error" /> : null
@@ -55,9 +61,18 @@ function PostsList() {
     ? postsList.map((article) => {
         const { slug, updatedAt, title, author, favoritesCount, favorited, description, tagList } = article
         return (
-          <Link to={`/articles/${slug}`} key={`${slug}_${updatedAt}`} className={classNames(stl.link, stl.post)}>
+          <button
+            // to={`/articles/${slug}`}
+            onClick={(evt) => onClick(evt, slug)}
+            key={`${slug}_${updatedAt}`}
+            className={stl.post}
+            // className={classNames(stl.link, stl.post)}
+            type="button"
+            data-type="post"
+          >
             {/* // < key={`${slug}_${updatedAt}`} className={stl.post}> */}
             <PostHeader
+              slug={slug}
               title={title}
               updatedAt={updatedAt}
               author={author}
@@ -65,8 +80,9 @@ function PostsList() {
               favorited={favorited}
               description={shortenDescription(description, 230)}
               tagList={tagList}
+              data-type="post-header"
             />
-          </Link>
+          </button>
         )
       })
     : null

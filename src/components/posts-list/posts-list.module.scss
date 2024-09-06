@@ -11,17 +11,24 @@
   // padding: 26px 0;
 }
 
-.link {
+.post {
 
-  text-decoration: none;
   color: inherit;
+  border: none;
 
-  &:visited{
+  &:visited {
     color: inherit;
   }
 
-}
+  &:hover {
+    cursor: pointer;
+  }
 
+  &:focus {
+    border: 1px solid black;
+  }
+
+}
 
 // .post {
 //   display: flex;

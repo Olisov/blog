@@ -1,10 +1,12 @@
-import React from 'react'
+import { React, useContext, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { Rate } from 'antd'
 import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import PropTypes from 'prop-types'
 import { format } from 'date-fns'
 
-import { randomHash } from '../../utilities'
+import { randomHash, appContext } from '../../utilities'
+import { asyncUpdateUserAuthRequest } from '../../store/slices'
 import defaultAva from '../../assets/default-ava.png'
 
 import stl from './post-header.module.scss'
@@ -18,10 +20,15 @@ function PostHeader(props) {
     description,
     tagList,
     title,
+    slug,
   } = props
+  const { tokenJWT } = useSelector((state) => state.authState)
+  const apiClientInstance = useContext(appContext)
 
-  function onRate() {
-    // console.log('like click')
+  function onRate(evt) {
+    console.log('onRate click', slug)
+
+    apiClientInstance.ratePost({ tokenJWT, slug, isFavored: favorited })
   }
 
   const customIcons = {
@@ -37,11 +44,12 @@ function PostHeader(props) {
           <div className={stl.title}>{title}</div>
           <div className={stl['rate-group']}>
             <Rate
+              data-type="heart"
               className={stl['rate-icon']}
               onChange={onRate}
               defaultValue={favorited ? 1 : 0}
               character={({ index = 0 }) => customIcons[index + 1]}
-              disabled
+              disabled={!tokenJWT}
             />
             <span className={stl['rate-title']}>{favoritesCount}</span>
           </div>
@@ -72,6 +80,7 @@ function PostHeader(props) {
 
 PostHeader.propTypes = {
   author: PropTypes.object.isRequired,
+  slug: PropTypes.string.isRequired,
   favoritesCount: PropTypes.number.isRequired,
   favorited: PropTypes.bool.isRequired,
   updatedAt: PropTypes.string.isRequired,
