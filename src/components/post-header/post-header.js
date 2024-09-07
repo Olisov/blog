@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { format } from 'date-fns'
 
 import { randomHash, appContext } from '../../utilities'
-import { asyncUpdateUserAuthRequest } from '../../store/slices'
+import { saveRatePost, asyncRatePost } from '../../store/slices'
 import defaultAva from '../../assets/default-ava.png'
 
 import stl from './post-header.module.scss'
@@ -24,11 +24,13 @@ function PostHeader(props) {
   } = props
   const { tokenJWT } = useSelector((state) => state.authState)
   const apiClientInstance = useContext(appContext)
+  const dispatch = useDispatch()
 
-  function onRate(evt) {
-    console.log('onRate click', slug)
+  // console.log('slug', slug)
 
-    apiClientInstance.ratePost({ tokenJWT, slug, isFavored: favorited })
+  function onRate() {
+    console.log('onRate')
+    dispatch(asyncRatePost({ apiClientInstance, requestData: { tokenJWT, slug, isFavored: favorited } }))
   }
 
   const customIcons = {
@@ -44,10 +46,11 @@ function PostHeader(props) {
           <div className={stl.title}>{title}</div>
           <div className={stl['rate-group']}>
             <Rate
+              count={1}
               data-type="heart"
               className={stl['rate-icon']}
               onChange={onRate}
-              defaultValue={favorited ? 1 : 0}
+              value={favorited ? 1 : 0}
               character={({ index = 0 }) => customIcons[index + 1]}
               disabled={!tokenJWT}
             />

@@ -1,4 +1,4 @@
-import { React, useEffect, useContext } from 'react'
+import { React, useEffect, useContext, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Pagination, ConfigProvider, Alert, Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -13,6 +13,7 @@ import stl from './posts-list.module.scss'
 
 function PostsList() {
   const { page, postsList, error, isLoading, totalPosts } = useSelector((state) => state.postsListLoadState)
+  const [currentPage, changeCurrentPage] = useState(page)
   const { tokenJWT } = useSelector((state) => state.authState)
   const dispatch = useDispatch()
   const apiClientInstance = useContext(appContext)
@@ -22,9 +23,15 @@ function PostsList() {
     dispatch(pageChange(newPage))
   }
 
+  // console.log('tokenJWT', tokenJWT)
+
   useEffect(() => {
-    dispatch(asyncRequestPostsList({ apiClientInstance, page, tokenJWT }))
-  }, [page])
+    // console.log('useEffect')
+    if (!postsList.length || currentPage !== page) {
+      dispatch(asyncRequestPostsList({ apiClientInstance, page, tokenJWT }))
+      changeCurrentPage(page)
+    }
+  }, [page, tokenJWT])
 
   function onClick(evt, slug) {
     if (evt.target.nodeName !== 'path') navigate(`/articles/${slug}`)

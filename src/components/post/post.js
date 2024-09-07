@@ -26,7 +26,7 @@ function Post() {
     return () => {
       dispatch(resetPost())
     }
-  }, [slug])
+  }, [slug, postsList])
 
   const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
 
@@ -42,6 +42,7 @@ function Post() {
         favorited={post.favorited}
         description={post.description}
         tagList={post.tagList}
+        slug={slug}
       />
       <div>
         <Markdown>{post.body}</Markdown>

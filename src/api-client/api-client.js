@@ -55,7 +55,7 @@ export default class ApiClient {
 
   async ratePost({ slug, tokenJWT, isFavored }) {
     const { baseUrl } = this.storage
-    const targetUrl = new URL(`/api/articles/${slug}/favorite___`, baseUrl)
+    const targetUrl = new URL(`/api/articles/${slug}/favorite`, baseUrl)
     const options = {
       method: !isFavored ? 'POST' : 'DELETE',
       headers: {
@@ -65,14 +65,13 @@ export default class ApiClient {
 
     const serverResponse = await fetch(targetUrl, options)
 
-    console.log('serverResponse', serverResponse)
+    // console.log('serverResponse', serverResponse)
 
     if (!serverResponse.ok) {
-      // throw new Error(`Server failure, received ${serverResponse.status}`)
+      throw new Error(`Server failure, received ${serverResponse.status}`)
     }
     const serverResponseBody = await serverResponse.json()
-
-    console.log('serverResponseBody', serverResponseBody)
+    // console.log('serverResponseBody', serverResponseBody)
     return serverResponseBody
   }
 
