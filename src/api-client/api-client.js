@@ -8,13 +8,6 @@ export default class ApiClient {
           accept: 'application/json',
         },
       },
-      // optionsPost: {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   // body: '{"user":{"username":"string","email":"string@mail.com","password":"string"}}',
-      // },
     }
   }
 
@@ -53,6 +46,27 @@ export default class ApiClient {
     return serverResponseBody
   }
 
+  async sentNewPost({ tokenJWT, newArticle }) {
+    const { baseUrl } = this.storage
+    const targetUrl = new URL('/api/articles', baseUrl)
+    const optionsPost = {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${tokenJWT}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ article: newArticle }),
+    }
+
+    const serverResponse = await fetch(targetUrl, optionsPost)
+
+    if (!serverResponse.ok) {
+      throw new Error(`Server failure, received ${serverResponse.status}`)
+    }
+    const serverResponseBody = await serverResponse.json()
+    return serverResponseBody
+  }
+
   async ratePost({ slug, tokenJWT, isFavored }) {
     const { baseUrl } = this.storage
     const targetUrl = new URL(`/api/articles/${slug}/favorite`, baseUrl)
@@ -65,14 +79,32 @@ export default class ApiClient {
 
     const serverResponse = await fetch(targetUrl, options)
 
+    if (!serverResponse.ok) {
+      throw new Error(`Server failure, received ${serverResponse.status}`)
+    }
+    const serverResponseBody = await serverResponse.json()
+    return serverResponseBody
+  }
+
+  async deletePost({ slug, tokenJWT }) {
+    const { baseUrl } = this.storage
+    const targetUrl = new URL(`/api/articles/${slug}`, baseUrl)
+    const optionsDelete = {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Token ${tokenJWT}`,
+      },
+    }
+
+    const serverResponse = await fetch(targetUrl, optionsDelete)
     // console.log('serverResponse', serverResponse)
 
     if (!serverResponse.ok) {
       throw new Error(`Server failure, received ${serverResponse.status}`)
     }
-    const serverResponseBody = await serverResponse.json()
+    // const serverResponseBody = await serverResponse.json()
     // console.log('serverResponseBody', serverResponseBody)
-    return serverResponseBody
+    // return slug
   }
 
   async userAuth({ username, email, password, authType }) {

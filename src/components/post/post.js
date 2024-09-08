@@ -17,6 +17,7 @@ function Post() {
   const { slug } = useParams()
   const { postsList } = useSelector((state) => state.postsListLoadState)
   const { isLoading, error, post } = useSelector((state) => state.postLoadState)
+  const { userName } = useSelector((state) => state.authState)
 
   useEffect(() => {
     const idx = postsList.findIndex((article) => article.slug === slug)
@@ -27,6 +28,9 @@ function Post() {
       dispatch(resetPost())
     }
   }, [slug, postsList])
+
+  // console.log('post', post.author)
+  // console.log('userName', userName)
 
   const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
 
@@ -43,6 +47,7 @@ function Post() {
         description={post.description}
         tagList={post.tagList}
         slug={slug}
+        editBtns={post.author.username === userName}
       />
       <div>
         <Markdown>{post.body}</Markdown>

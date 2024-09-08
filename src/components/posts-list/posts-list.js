@@ -12,12 +12,16 @@ import { asyncRequestPostsList, pageChange } from '../../store/slices'
 import stl from './posts-list.module.scss'
 
 function PostsList() {
-  const { page, postsList, error, isLoading, totalPosts } = useSelector((state) => state.postsListLoadState)
+  const { page, postsList, error, isLoading, totalPosts, postCreated } = useSelector(
+    (state) => state.postsListLoadState
+  )
   const [currentPage, changeCurrentPage] = useState(page)
   const { tokenJWT } = useSelector((state) => state.authState)
   const dispatch = useDispatch()
   const apiClientInstance = useContext(appContext)
   const navigate = useNavigate()
+
+  const lastPage = Math.ceil(totalPosts / 5)
 
   const changePage = (newPage) => {
     dispatch(pageChange(newPage))
@@ -26,19 +30,23 @@ function PostsList() {
   // console.log('tokenJWT', tokenJWT)
 
   useEffect(() => {
-    // console.log('useEffect')
-    if (!postsList.length || currentPage !== page) {
+    console.log('useEffect')
+    if ((currentPage !== lastPage && postsList.length !== 5) || currentPage !== page) {
+      // if (!postsList.length || currentPage !== page) {
       dispatch(asyncRequestPostsList({ apiClientInstance, page, tokenJWT }))
-      changeCurrentPage(page)
+      if (currentPage !== page) changeCurrentPage(page)
     }
-  }, [page, tokenJWT])
+    // if (postCreated) {
+    //   dispatch(resetPostCreated())
+    // }
+  }, [page, tokenJWT, postsList.length])
 
   function onClick(evt, slug) {
     if (evt.target.nodeName !== 'path') navigate(`/articles/${slug}`)
   }
 
   const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
-  const errorMessage = error ? <Alert message={error} type="error" /> : null
+  const errorMessage = error ? <Alert message={error} closable type="error" /> : null
   const pagination = postsList.length ? (
     <ConfigProvider
       theme={{
@@ -87,7 +95,7 @@ function PostsList() {
               favorited={favorited}
               description={shortenDescription(description, 230)}
               tagList={tagList}
-              data-type="post-header"
+              editBtns={false}
             />
           </button>
         )

@@ -1,12 +1,13 @@
-import { React, useContext, useEffect } from 'react'
+import { React, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Rate } from 'antd'
+import { Rate, Button, Popconfirm, ConfigProvider } from 'antd'
 import { HeartOutlined, HeartFilled } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { format } from 'date-fns'
 
 import { randomHash, appContext } from '../../utilities'
-import { saveRatePost, asyncRatePost } from '../../store/slices'
+import { asyncRatePost, asyncDeletePost } from '../../store/slices'
 import defaultAva from '../../assets/default-ava.png'
 
 import stl from './post-header.module.scss'
@@ -21,15 +22,19 @@ function PostHeader(props) {
     tagList,
     title,
     slug,
+    editBtns,
   } = props
   const { tokenJWT } = useSelector((state) => state.authState)
   const apiClientInstance = useContext(appContext)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  // console.log('slug', slug)
+  const confirm = () => {
+    dispatch(asyncDeletePost({ apiClientInstance, tokenJWT, slug }))
+    navigate('/articles')
+  }
 
   function onRate() {
-    console.log('onRate')
     dispatch(asyncRatePost({ apiClientInstance, requestData: { tokenJWT, slug, isFavored: favorited } }))
   }
 
@@ -69,13 +74,46 @@ function PostHeader(props) {
         </div>
         <div className={stl.text}>{description}</div>
       </div>
-      <div className={stl.profile}>
-        <div className={stl['profile-label']}>
-          <div className={stl.name}>{username}</div>
-          <div className={stl.date}>{updatedAt ? format(new Date(updatedAt), 'MMMM d, y') : 'No date'}</div>
+      <div className={stl['right-side']}>
+        <div className={stl.profile}>
+          <div className={stl['profile-label']}>
+            <div className={stl.name}>{username}</div>
+            <div className={stl.date}>{updatedAt ? format(new Date(updatedAt), 'MMMM d, y') : 'No date'}</div>
+          </div>
+          <img className={stl['profile-img']} alt="Profile" src={image} />
         </div>
-        <img className={stl['profile-img']} alt="Profile" src={image} />
+        {editBtns ? (
+          <div className={stl['btn-group']}>
+            <Popconfirm
+              title="Are you sure to delete this article?"
+              onConfirm={confirm}
+              placement="rightTop"
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button danger className={stl.btn}>
+                Delete
+              </Button>
+            </Popconfirm>
+
+            <ConfigProvider
+              theme={{
+                components: {
+                  Button: {
+                    defaultBorderColor: '#52c41a',
+                    defaultColor: '#52c41a',
+                    defaultHoverBg: '#1890ff',
+                    defaultHoverColor: '#fff',
+                  },
+                },
+              }}
+            >
+              <Button className={stl.btn}>Edit</Button>
+            </ConfigProvider>
+          </div>
+        ) : null}
       </div>
+
       {/* </section> */}
     </div>
   )
@@ -90,6 +128,7 @@ PostHeader.propTypes = {
   description: PropTypes.string,
   tagList: PropTypes.array.isRequired,
   title: PropTypes.string.isRequired,
+  editBtns: PropTypes.bool.isRequired,
 }
 
 export default PostHeader

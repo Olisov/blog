@@ -115,3 +115,17 @@
   // line-height: 183%;
   color: $lightBlackColor;
 }
+
+.btn {
+
+  padding: 0 18px;
+
+  &-group {
+
+    margin-top: 32px;
+    display: flex;
+    justify-content: end;
+    column-gap: 12px;
+    // align-items: flex-end;
+  }
+}

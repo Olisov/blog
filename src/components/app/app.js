@@ -10,6 +10,7 @@ import SignIn from '../sign-in'
 import SignUp from '../sign-up'
 import Profile from '../profile'
 import Post from '../post'
+import PostConfig from '../post-config'
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: '/articles/:slug',
         element: <Post />,
+      },
+      {
+        path: '/new-article',
+        element: <PostConfig />,
       },
       {
         path: '/sign-in',
