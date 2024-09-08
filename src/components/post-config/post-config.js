@@ -1,23 +1,31 @@
-import { React, useContext, useState } from 'react'
+import { React, useContext, useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Button, Alert, Spin, ConfigProvider } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import { randomHash, appContext } from '../../utilities'
-import { asyncCreatePost } from '../../store/slices'
+import { asyncCreatePost, asyncRequestPost, asyncUpdatePost } from '../../store/slices'
 
 import stl from './post-config.module.scss'
 
 function PostConfig() {
-  const [tagsList, changeTagsList] = useState([{ id: randomHash(), tag: '' }])
+  const { slug } = useParams()
+  const { isLoading, error, currentPost } = useSelector((state) => state.postsListLoadState)
+  const [tagsList, changeTagsList] = useState(
+    currentPost ? currentPost.tagList.map((tag) => ({ id: randomHash(), tag })) : [{ id: randomHash(), tag: '' }]
+  )
+  const [isSubmitted, changeIsSubmitted] = useState(false)
   const apiClientInstance = useContext(appContext)
   const dispatch = useDispatch()
-  const navigate = useNavigate()
+  //   const navigate = useNavigate()
   const { tokenJWT } = useSelector((state) => state.authState)
-  const { isLoading, error } = useSelector((state) => state.postsListLoadState)
+
+  //   console.log('slug', slug)
+
   const {
     register,
     unregister,
@@ -25,6 +33,10 @@ function PostConfig() {
     handleSubmit,
     reset,
   } = useForm({ mode: 'onBlur' })
+
+  useEffect(() => {
+    if (slug && !currentPost) dispatch(asyncRequestPost({ apiClientInstance, slug }))
+  }, [])
 
   const onSubmit = (formData) => {
     // console.log('formData', formData)
@@ -35,22 +47,38 @@ function PostConfig() {
       tags.push(formData[tagName])
     })
 
-    dispatch(
-      asyncCreatePost({
-        apiClientInstance,
-        tokenJWT,
-        newArticle: {
-          title: formData.title,
-          description: formData['short-description'],
-          body: formData.text,
-          tagList: tags,
-        },
-      })
-    )
-    navigate(`/articles/${formData.title}`)
-    reset()
+    const newArticle = {
+      title: formData.title,
+      description: formData['short-description'],
+      body: formData.text,
+      tagList: tags,
+    }
+
+    if (slug) {
+      //   console.log('formData', formData)
+      dispatch(
+        asyncUpdatePost({
+          apiClientInstance,
+          tokenJWT,
+          slug,
+          updatedArticle: newArticle,
+        })
+      )
+    } else {
+      dispatch(
+        asyncCreatePost({
+          apiClientInstance,
+          tokenJWT,
+          newArticle,
+        })
+      )
+    }
+    changeIsSubmitted(true)
+    // reset()
   }
 
+  if (currentPost && isSubmitted) return <Navigate to={`/articles/${currentPost.slug}`} />
+  //   console.log('currentPost', currentPost)
   // dispatch(resetPostCreated())
 
   const onAddTag = () => {
@@ -70,7 +98,7 @@ function PostConfig() {
 
   return (
     <form className={stl.body} onSubmit={handleSubmit(onSubmit)}>
-      <div className={stl.title}>Create new article</div>
+      <div className={stl.title}>{currentPost ? 'Edit article' : 'Create new article'}</div>
       {loadingSpinner}
       {errorMessage}
       <div className={stl['input-group']}>
@@ -79,6 +107,7 @@ function PostConfig() {
           className={errors.title ? classNames(stl.input, stl['incorrect-input']) : classNames(stl.input)}
           {...register('title', {
             required: 'This field is required!',
+            value: currentPost ? currentPost.title : '',
           })}
           placeholder="Title"
         />
@@ -92,6 +121,7 @@ function PostConfig() {
           }
           {...register('short-description', {
             required: 'This field is required!',
+            value: currentPost ? currentPost.description : '',
           })}
           placeholder="Short description"
         />
@@ -108,6 +138,7 @@ function PostConfig() {
           }
           {...register('text', {
             required: 'This field is required!',
+            value: currentPost ? currentPost.body : '',
           })}
           placeholder="Text"
         />
@@ -125,9 +156,8 @@ function PostConfig() {
                     className={stl['tag-input']}
                     {...register(`tag-${tag.id}`, {
                       required: 'This field is required!',
-                      defaultValue: tag.tag,
+                      value: tag.tag,
                     })}
-                    // defaultValue={tag.tag}
                     placeholder="tag"
                   />
                   <Button danger size="large" onClick={() => onDeleteTag(tag.id)} className={stl['tag-delete-btn']}>
@@ -136,13 +166,6 @@ function PostConfig() {
                 </div>
               )
             })}
-
-            {/* <div className={stl.tag}>
-              <input className={stl['tag-input']} />
-              <Button danger size="large" className={stl['tag-delete-btn']}>
-                Delete
-              </Button>
-            </div> */}
           </div>
           <ConfigProvider
             theme={{

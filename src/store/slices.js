@@ -6,6 +6,7 @@ const postsListLoadState = createSlice({
     isLoading: false,
     error: null,
     // postCreated: null,
+    currentPost: null,
     postsList: [],
     totalPosts: null,
     page: 1,
@@ -23,43 +24,51 @@ const postsListLoadState = createSlice({
       postsList: state.postsList.map((post) =>
         post.slug === action.payload.article.slug ? action.payload.article : post
       ),
+      currentPost: action.payload.article,
     }),
     savePostsListError: (state, action) => ({ ...state, isLoading: false, error: action.payload }),
     pageChange: (state, action) => ({ ...state, page: action.payload }),
+    setCurrentPost: (state, action) => ({ ...state, currentPost: action.payload }),
     saveNewPost: (state, action) => ({
       ...state,
       postsList: [action.payload.article, ...state.postsList],
+      currentPost: action.payload.article,
       // postCreated: true,
     }),
     deletePost: (state, action) => ({
       ...state,
       postsList: state.postsList.filter((post) => post.slug !== action.payload),
     }),
+    savePost: (state, action) => ({ ...state, isLoading: false, currentPost: action.payload }),
+    savePostError: (state, action) => ({ ...state, isLoading: false, error: action.payload }),
+    resetPost: (state) => ({ ...state, isLoading: false, error: null, currentPost: null }),
     // resetPostCreated: (state) => ({ ...state, isLoading: false, postCreated: false }),
   },
   extraReducers: (builder) => {
-    builder.addCase(asyncRequestPostsList.pending, (state) => ({ ...state, postsList: [], isLoading: true })) /// fulfilled rejected
+    builder
+      .addCase(asyncRequestPostsList.pending, (state) => ({ ...state, postsList: [], isLoading: true })) /// fulfilled rejected
+      .addCase(asyncRequestPost.pending, (state) => ({ ...state, currentPost: null, isLoading: true }))
     // .addCase(asyncCreatePost.pending, (state) => ({ ...state, isLoading: true }))
     // .addCase(asyncRatePost.pending, (state) => ({ ...state, isLoading: true }))
   },
 })
 
-const postLoadState = createSlice({
-  name: 'postLoadState',
-  initialState: {
-    isLoading: false,
-    error: null,
-    post: null,
-  },
-  reducers: {
-    savePost: (state, action) => ({ ...state, isLoading: false, post: action.payload }),
-    savePostError: (state, action) => ({ ...state, isLoading: false, error: action.payload }),
-    resetPost: () => ({ isLoading: false, error: null, post: null }),
-  },
-  extraReducers: (builder) => {
-    builder.addCase(asyncRequestPost.pending, (state) => ({ ...state, post: null, isLoading: true }))
-  },
-})
+// const postLoadState = createSlice({
+//   name: 'postLoadState',
+//   initialState: {
+//     isLoading: false,
+//     error: null,
+//     post: null,
+//   },
+//   reducers: {
+//     savePost: (state, action) => ({ ...state, isLoading: false, post: action.payload }),
+//     savePostError: (state, action) => ({ ...state, isLoading: false, error: action.payload }),
+//     resetPost: () => ({ isLoading: false, error: null, post: null }),
+//   },
+//   extraReducers: (builder) => {
+//     builder.addCase(asyncRequestPost.pending, (state) => ({ ...state, post: null, isLoading: true }))
+//   },
+// })
 
 const authState = createSlice({
   name: 'authState',
@@ -148,6 +157,25 @@ export const asyncCreatePost = createAsyncThunk(
       })
   }
 )
+
+export const asyncUpdatePost = createAsyncThunk(
+  'postsListLoadState/updatePostRequest',
+  ({ apiClientInstance, tokenJWT, slug, updatedArticle }, { dispatch }) => {
+    // console.log('updatedArticle', updatedArticle)
+    // dispatch(saveUpdatePost({ article: updatedArticle }))
+
+    apiClientInstance
+      .updatePost({ tokenJWT, slug, updatedArticle })
+      .then((responseBody) => {
+        console.log('responseBody', responseBody)
+        dispatch(saveUpdatePost(responseBody))
+      })
+      .catch((getPostsListError) => {
+        dispatch(savePostsListError(getPostsListError.message))
+      })
+  }
+)
+
 export const asyncDeletePost = createAsyncThunk(
   'postsListLoadState/deletePostRequest',
   ({ apiClientInstance, tokenJWT, slug }, { dispatch }) => {
@@ -163,7 +191,7 @@ export const asyncDeletePost = createAsyncThunk(
 )
 
 export const asyncRequestPost = createAsyncThunk(
-  'postLoadState/requestPost',
+  'postsListLoadState/requestPost',
   ({ apiClientInstance, slug }, { dispatch }) => {
     apiClientInstance
       .getPost(slug)
@@ -208,12 +236,22 @@ export const asyncUpdateUserAuthRequest = createAsyncThunk(
   }
 )
 
-export const { savePostsList, savePostsListError, pageChange, saveUpdatePost, saveNewPost, deletePost } =
-  postsListLoadState.actions
+export const {
+  savePostsList,
+  savePostsListError,
+  pageChange,
+  saveUpdatePost,
+  saveNewPost,
+  setCurrentPost,
+  deletePost,
+  savePost,
+  savePostError,
+  resetPost,
+} = postsListLoadState.actions
 export const postsListLoadStateReducer = postsListLoadState.reducer
 
-export const { savePost, savePostError, resetPost } = postLoadState.actions
-export const postLoadReducer = postLoadState.reducer
+// export const { savePost, savePostError, resetPost } = postLoadState.actions
+// export const postLoadReducer = postLoadState.reducer
 
 export const { saveUserAuthData, saveAuthErrorsList, saveAuthRequestError, resetUserAuthData, resetAuthErrorsList } =
   authState.actions

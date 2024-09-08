@@ -15,8 +15,8 @@ function Post() {
   const apiClientInstance = useContext(appContext)
   const dispatch = useDispatch()
   const { slug } = useParams()
-  const { postsList } = useSelector((state) => state.postsListLoadState)
-  const { isLoading, error, post } = useSelector((state) => state.postLoadState)
+  const { postsList, isLoading, error, currentPost } = useSelector((state) => state.postsListLoadState)
+  // const { isLoading, error, post } = useSelector((state) => state.postLoadState)
   const { userName } = useSelector((state) => state.authState)
 
   useEffect(() => {
@@ -24,9 +24,9 @@ function Post() {
     if (idx >= 0) dispatch(savePost(postsList[idx]))
     else dispatch(asyncRequestPost({ apiClientInstance, slug }))
 
-    return () => {
-      dispatch(resetPost())
-    }
+    // return () => {
+    //   dispatch(resetPost())
+    // }
   }, [slug, postsList])
 
   // console.log('post', post.author)
@@ -36,21 +36,21 @@ function Post() {
 
   const errorMessage =
     error && !isLoading ? <Alert message={error} type="error" banner /> : <div> 404 Page Not Found</div>
-  const content = post ? (
+  const content = currentPost ? (
     <div className={stl.post}>
       <PostHeader
-        title={post.title}
-        updatedAt={post.updatedAt}
-        author={post.author}
-        favoritesCount={post.favoritesCount}
-        favorited={post.favorited}
-        description={post.description}
-        tagList={post.tagList}
+        title={currentPost.title}
+        updatedAt={currentPost.updatedAt}
+        author={currentPost.author}
+        favoritesCount={currentPost.favoritesCount}
+        favorited={currentPost.favorited}
+        description={currentPost.description}
+        tagList={currentPost.tagList}
         slug={slug}
-        editBtns={post.author.username === userName}
+        editBtns={currentPost.author.username === userName}
       />
       <div>
-        <Markdown>{post.body}</Markdown>
+        <Markdown>{currentPost.body}</Markdown>
       </div>
     </div>
   ) : (

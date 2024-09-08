@@ -11,6 +11,7 @@ import SignUp from '../sign-up'
 import Profile from '../profile'
 import Post from '../post'
 import PostConfig from '../post-config'
+import EditPost from '../post-edit'
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: '/articles/:slug',
         element: <Post />,
+      },
+      {
+        path: '/articles/:slug/edit',
+        element: <PostConfig />,
       },
       {
         path: '/new-article',

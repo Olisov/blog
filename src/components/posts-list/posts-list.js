@@ -7,12 +7,12 @@ import classNames from 'classnames'
 
 import { shortenDescription, appContext } from '../../utilities'
 import PostHeader from '../post-header'
-import { asyncRequestPostsList, pageChange } from '../../store/slices'
+import { asyncRequestPostsList, pageChange, resetPost, setCurrentPost } from '../../store/slices'
 
 import stl from './posts-list.module.scss'
 
 function PostsList() {
-  const { page, postsList, error, isLoading, totalPosts, postCreated } = useSelector(
+  const { page, postsList, error, isLoading, totalPosts, currentPost } = useSelector(
     (state) => state.postsListLoadState
   )
   const [currentPage, changeCurrentPage] = useState(page)
@@ -28,6 +28,7 @@ function PostsList() {
   }
 
   // console.log('tokenJWT', tokenJWT)
+  // console.log('currentPost', currentPost)
 
   useEffect(() => {
     console.log('useEffect')
@@ -36,12 +37,11 @@ function PostsList() {
       dispatch(asyncRequestPostsList({ apiClientInstance, page, tokenJWT }))
       if (currentPage !== page) changeCurrentPage(page)
     }
-    // if (postCreated) {
-    //   dispatch(resetPostCreated())
-    // }
+    // if (currentPost) dispatch(resetPost())
   }, [page, tokenJWT, postsList.length])
 
   function onClick(evt, slug) {
+    // dispatch(setCurrentPost(article))
     if (evt.target.nodeName !== 'path') navigate(`/articles/${slug}`)
   }
 

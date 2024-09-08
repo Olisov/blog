@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import { postsListLoadStateReducer, postLoadReducer, authStateReducer } from './slices'
+import { postsListLoadStateReducer, authStateReducer } from './slices'
 
 const store = configureStore({
   reducer: {
     postsListLoadState: postsListLoadStateReducer,
-    postLoadState: postLoadReducer,
+    // postLoadState: postLoadReducer,
     authState: authStateReducer,
   },
 })

@@ -34,6 +34,10 @@ function PostHeader(props) {
     navigate('/articles')
   }
 
+  const onEdit = () => {
+    navigate(`/articles/${slug}/edit`)
+  }
+
   function onRate() {
     dispatch(asyncRatePost({ apiClientInstance, requestData: { tokenJWT, slug, isFavored: favorited } }))
   }
@@ -95,7 +99,6 @@ function PostHeader(props) {
                 Delete
               </Button>
             </Popconfirm>
-
             <ConfigProvider
               theme={{
                 components: {
@@ -108,7 +111,9 @@ function PostHeader(props) {
                 },
               }}
             >
-              <Button className={stl.btn}>Edit</Button>
+              <Button className={stl.btn} onClick={onEdit}>
+                Edit
+              </Button>
             </ConfigProvider>
           </div>
         ) : null}
