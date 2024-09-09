@@ -24,6 +24,7 @@ function PostHeader(props) {
     slug,
     editBtns,
   } = props
+
   const { tokenJWT } = useSelector((state) => state.authState)
   const apiClientInstance = useContext(appContext)
   const dispatch = useDispatch()

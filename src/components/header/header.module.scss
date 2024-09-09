@@ -1,13 +1,14 @@
 @import '../../index.module.scss';
 
 .body {
-  padding: 15px 24px;
+  padding: 16px 24px;
   box-sizing: border-box;
   background-color: $whiteColor;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 18px;
+  height: 86px;
 }
 
 .link {

@@ -43,6 +43,7 @@ const postsListLoadState = createSlice({
     builder
       .addCase(asyncRequestPostsList.pending, (state) => ({ ...state, postsList: [], isLoading: true }))
       .addCase(asyncRequestPost.pending, (state) => ({ ...state, currentPost: null, isLoading: true }))
+      .addCase(asyncDeletePost.pending, (state) => ({ ...state, currentPost: null, isLoading: true }))
       .addCase(asyncUpdatePost.pending, (state) => ({ ...state, isLoading: true }))
       .addCase(asyncUpdatePost.fulfilled, (state, action) => ({
         ...state,
@@ -152,7 +153,7 @@ export const asyncCreatePost = createAsyncThunk(
 
 export const asyncUpdatePost = createAsyncThunk(
   'postsListLoadState/updatePostRequest',
-  async function ({ tokenJWT, slug, updatedArticle }, { rejectWithValue }) {
+  async ({ tokenJWT, slug, updatedArticle }, { rejectWithValue }) => {
     try {
       const targetUrl = new URL(`/api/articles/${slug}`, 'https://blog.kata.academy/api/')
       const optionsPut = {

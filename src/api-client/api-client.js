@@ -119,7 +119,6 @@ export default class ApiClient {
     }
 
     const serverResponse = await fetch(targetUrl, optionsDelete)
-
     if (!serverResponse.ok) {
       throw new Error(`Server failure, received ${serverResponse.status}`)
     }

@@ -4,7 +4,7 @@
 
 $whiteColor: white;
 $mainBgColor: #ebeef3;
-$borderGrayColor:  #d9d9d9;
+$borderGrayColor: #d9d9d9;
 $blueColor: #1890ff;
 $lightGreenColor: #52c41a;
 $redColor: #ff0707;
@@ -13,8 +13,6 @@ $lightBlackColor: rgba(0, 0, 0, 0.5);
 $textGrayColor: #262626;
 $textLightGrayColor: #8c8c8c;
 $textWhiteColor: #bfbfbf;
-
-
 
 body {
   margin: 0;
@@ -29,7 +27,9 @@ body {
   align-items: center;
   row-gap: 26px;
   padding: 26px 0;
-  min-height: 86vh;
+  // min-height: 86vh;
+  min-height: calc(100vh - 86px);
+  box-sizing: border-box;
 }
 
 .post {
