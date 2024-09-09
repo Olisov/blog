@@ -144,15 +144,6 @@ export default class ApiClient {
               user: { email, password },
             }),
     }
-    // optionsPost.body =
-    //   authType === 'create'
-    //     ? JSON.stringify({
-    //         user: { username, email, password },
-    //       })
-    //     : JSON.stringify({
-    //         user: { email, password },
-    //       })
-
     const serverResponse = await fetch(targetUrl, optionsPost)
 
     if (!serverResponse.ok && serverResponse.status !== 422) {

@@ -48,7 +48,6 @@ function PostHeader(props) {
   }
 
   return (
-    // <section className={stl.body}>
     <div className={stl.body}>
       <div className={stl['left-side']}>
         <div className={stl['title-group']}>

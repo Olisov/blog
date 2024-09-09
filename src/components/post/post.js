@@ -16,7 +16,6 @@ function Post() {
   const dispatch = useDispatch()
   const { slug } = useParams()
   const { postsList, isLoading, error, currentPost } = useSelector((state) => state.postsListLoadState)
-  // const { isLoading, error, post } = useSelector((state) => state.postLoadState)
   const { userName } = useSelector((state) => state.authState)
 
   useEffect(() => {
@@ -26,9 +25,6 @@ function Post() {
       else dispatch(asyncRequestPost({ apiClientInstance, slug }))
     }
   }, [currentPost])
-
-  // console.log('post', post.author)
-  // console.log('userName', userName)
 
   const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
 

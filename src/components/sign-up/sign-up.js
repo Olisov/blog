@@ -24,15 +24,6 @@ function SignUp() {
     reset,
     getValues,
   } = useForm({ mode: 'onBlur' })
-  //   {
-  //   mode: 'onBlur',
-  //   defaultValues: {
-  //     username: 'Ollsll',
-  //     email: 'fadvbfa@.mail.com',
-  //     password: 'Ollsll12',
-  //     'password-conform': 'Ollsll12',
-  //   },
-  // }
 
   const onSubmit = (formData) => {
     dispatch(

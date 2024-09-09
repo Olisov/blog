@@ -17,7 +17,6 @@ function Header() {
     localStorage.removeItem('email')
     localStorage.removeItem('tokenJWT')
     localStorage.removeItem('avatarImg')
-    // localStorage.removeItem('userAuth')
 
     dispatch(resetUserAuthData())
   }

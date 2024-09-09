@@ -4,7 +4,6 @@
   padding: 15px 24px;
   box-sizing: border-box;
   background-color: $whiteColor;
-  // min-height: 85px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,11 +11,9 @@
 }
 
 .link {
-  // align-self: stretch;
   min-height: 50px;
   padding: 12px 20px;
   line-height: 156%;
-  // font-size: 18px;
   font-weight: 400;
   box-sizing: border-box;
   align-items: center;
@@ -33,7 +30,6 @@
 
   &-group {
     display: flex;
-    // flex-basis: 230px;
     justify-content: space-between;
     align-items: center;
     column-gap: 16px;
@@ -51,7 +47,7 @@
     color: $blackColor;
   }
 
-  &-img{
+  &-img {
     max-width: 46px;
     max-height: 46px;
     border-radius: 50%;
@@ -59,7 +55,6 @@
 }
 
 .create-btn {
-  // font-family: 'Inter UI', sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 157%;

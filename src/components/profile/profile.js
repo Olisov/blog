@@ -70,7 +70,6 @@ function Profile() {
         <input
           className={errors.username ? classNames(stl.input, stl['incorrect-input']) : classNames(stl.input)}
           type="text"
-          // defaultValue={userName}
           {...register('username', {
             required: !userName ? 'This field is required!' : false,
             minLength: {
@@ -91,9 +90,7 @@ function Profile() {
         <input
           className={errors.email ? classNames(stl.input, stl['incorrect-input']) : classNames(stl.input)}
           type="text"
-          // value={email}
           {...register('email', {
-            // value: email,
             required: !email ? 'This field is required!' : false,
             pattern: {
               value: /^[a-z]\S+@\S+\.\S+$/,

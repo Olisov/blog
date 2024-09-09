@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Pagination, ConfigProvider, Alert, Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import classNames from 'classnames'
 
 import { shortenDescription, appContext } from '../../utilities'
 import PostHeader from '../post-header'
@@ -12,9 +11,7 @@ import { asyncRequestPostsList, pageChange } from '../../store/slices'
 import stl from './posts-list.module.scss'
 
 function PostsList() {
-  const { page, postsList, error, isLoading, totalPosts, currentPost } = useSelector(
-    (state) => state.postsListLoadState
-  )
+  const { page, postsList, error, isLoading, totalPosts } = useSelector((state) => state.postsListLoadState)
   const [currentPage, changeCurrentPage] = useState(page)
   const { tokenJWT } = useSelector((state) => state.authState)
   const dispatch = useDispatch()
@@ -28,7 +25,6 @@ function PostsList() {
   }
 
   useEffect(() => {
-    // console.log('useEffect')
     if ((currentPage !== lastPage && postsList.length !== 5) || currentPage !== page) {
       dispatch(asyncRequestPostsList({ apiClientInstance, page, tokenJWT }))
       if (currentPage !== page) changeCurrentPage(page)
@@ -36,7 +32,6 @@ function PostsList() {
   }, [page, tokenJWT, postsList.length])
 
   function onClick(evt, slug) {
-    // dispatch(setCurrentPost(article))
     if (evt.target.nodeName !== 'path') navigate(`/articles/${slug}`)
   }
 
@@ -72,15 +67,12 @@ function PostsList() {
         const { slug, updatedAt, title, author, favoritesCount, favorited, description, tagList } = article
         return (
           <button
-            // to={`/articles/${slug}`}
             onClick={(evt) => onClick(evt, slug)}
             key={`${slug}_${updatedAt}`}
             className={stl.post}
-            // className={classNames(stl.link, stl.post)}
             type="button"
             data-type="post"
           >
-            {/* // < key={`${slug}_${updatedAt}`} className={stl.post}> */}
             <PostHeader
               slug={slug}
               title={title}
@@ -98,16 +90,6 @@ function PostsList() {
     : null
 
   return (
-    // <main className={stl.main}>
-    //   {/* <PostHeader />
-    //   <PostHeader />
-    //   <PostHeader /> */}
-    //   {loadingSpinner}
-    //   {errorMessage}
-    //   {content}
-    //   {pagination}
-    // </main>
-
     <>
       {loadingSpinner}
       {errorMessage}
