@@ -11,7 +11,6 @@ import SignUp from '../sign-up'
 import Profile from '../profile'
 import Post from '../post'
 import PostConfig from '../post-config'
-import EditPost from '../post-edit'
 
 const router = createBrowserRouter([
   {

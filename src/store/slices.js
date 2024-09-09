@@ -28,27 +28,44 @@ const postsListLoadState = createSlice({
     }),
     savePostsListError: (state, action) => ({ ...state, isLoading: false, error: action.payload }),
     pageChange: (state, action) => ({ ...state, page: action.payload }),
-    setCurrentPost: (state, action) => ({ ...state, currentPost: action.payload }),
+    // setCurrentPost: (state, action) => ({ ...state, currentPost: action.payload }),
     saveNewPost: (state, action) => ({
       ...state,
+      isLoading: false,
       postsList: [action.payload.article, ...state.postsList],
       currentPost: action.payload.article,
       // postCreated: true,
     }),
     deletePost: (state, action) => ({
       ...state,
+      currentPost: null,
       postsList: state.postsList.filter((post) => post.slug !== action.payload),
     }),
     savePost: (state, action) => ({ ...state, isLoading: false, currentPost: action.payload }),
-    savePostError: (state, action) => ({ ...state, isLoading: false, error: action.payload }),
-    resetPost: (state) => ({ ...state, isLoading: false, error: null, currentPost: null }),
+    // savePostError: (state, action) => ({ ...state, isLoading: false, error: action.payload }),
+    // resetPost: (state) => ({ ...state, isLoading: false, error: null, currentPost: null }),
     // resetPostCreated: (state) => ({ ...state, isLoading: false, postCreated: false }),
   },
   extraReducers: (builder) => {
     builder
       .addCase(asyncRequestPostsList.pending, (state) => ({ ...state, postsList: [], isLoading: true })) /// fulfilled rejected
       .addCase(asyncRequestPost.pending, (state) => ({ ...state, currentPost: null, isLoading: true }))
-    // .addCase(asyncCreatePost.pending, (state) => ({ ...state, isLoading: true }))
+      .addCase(asyncUpdatePost.pending, (state) => ({ ...state, isLoading: true }))
+      .addCase(asyncUpdatePost.fulfilled, (state, action) => ({
+        ...state,
+        postsList: state.postsList.map((post) =>
+          post.slug === action.payload.article.slug ? action.payload.article : post
+        ),
+        currentPost: action.payload.article,
+        isLoading: false,
+        error: null,
+      }))
+      .addCase(asyncUpdatePost.rejected, (state, action) => ({
+        ...state,
+        error: action.payload,
+        isLoading: false,
+      }))
+      .addCase(asyncCreatePost.pending, (state) => ({ ...state, isLoading: true }))
     // .addCase(asyncRatePost.pending, (state) => ({ ...state, isLoading: true }))
   },
 })
@@ -76,7 +93,7 @@ const authState = createSlice({
     userName: null,
     email: null,
     tokenJWT: null,
-    avatarImg: null,
+    avatarImg: undefined,
     isLoading: false,
     authRequestError: null,
     authErrorsList: {},
@@ -88,7 +105,7 @@ const authState = createSlice({
       userName: action.payload.username,
       email: action.payload.email,
       tokenJWT: action.payload.token,
-      avatarImg: action.payload.image,
+      avatarImg: action.payload.image ? action.payload.image : undefined,
     }),
     resetUserAuthData: (state) => ({ ...state, userName: null, email: null, tokenJWT: null }),
     saveAuthErrorsList: (state, action) => ({ ...state, isLoading: false, authErrorsList: action.payload }),
@@ -158,22 +175,63 @@ export const asyncCreatePost = createAsyncThunk(
   }
 )
 
+// export const asyncUpdatePost = createAsyncThunk(
+//   'postsListLoadState/updatePostRequest',
+//   ({ apiClientInstance, tokenJWT, slug, updatedArticle }, { dispatch }) => {
+//     // console.log('updatedArticle', updatedArticle)
+//     // dispatch(saveUpdatePost({ article: updatedArticle }))
+
+//     apiClientInstance
+//       .updatePost({ tokenJWT, slug, updatedArticle })
+//       .then((responseBody) => {
+//         console.log('responseBody', responseBody)
+//         dispatch(saveUpdatePost(responseBody))
+//       })
+//       .catch((getPostsListError) => {
+//         dispatch(savePostsListError(getPostsListError.message))
+//       })
+//   }
+// )
+
 export const asyncUpdatePost = createAsyncThunk(
   'postsListLoadState/updatePostRequest',
-  ({ apiClientInstance, tokenJWT, slug, updatedArticle }, { dispatch }) => {
-    // console.log('updatedArticle', updatedArticle)
-    // dispatch(saveUpdatePost({ article: updatedArticle }))
+  async function ({ tokenJWT, slug, updatedArticle }, { rejectWithValue }) {
+    try {
+      const targetUrl = new URL(`/api/articles/${slug}`, 'https://blog.kata.academy/api/')
+      const optionsPut = {
+        method: 'PUT',
+        'Content-Type': 'application/json',
+        headers: {
+          Authorization: `Token ${tokenJWT}`,
+        },
+        body: JSON.stringify({ article: updatedArticle }),
+      }
 
-    apiClientInstance
-      .updatePost({ tokenJWT, slug, updatedArticle })
-      .then((responseBody) => {
-        console.log('responseBody', responseBody)
-        dispatch(saveUpdatePost(responseBody))
-      })
-      .catch((getPostsListError) => {
-        dispatch(savePostsListError(getPostsListError.message))
-      })
+      const serverResponse = await fetch(targetUrl, optionsPut)
+
+      if (!serverResponse.ok) {
+        throw new Error(`Server failure, received ${serverResponse.status}`)
+      }
+      const serverResponseBody = await serverResponse.json()
+      return serverResponseBody
+    } catch (error) {
+      return rejectWithValue(`Error - ${error.message}`)
+    }
   }
+  // ({ apiClientInstance, tokenJWT, slug, updatedArticle }, { dispatch }) => {
+  //   // console.log('updatedArticle', updatedArticle)
+  //   // dispatch(saveUpdatePost({ article: updatedArticle }))
+
+  //   apiClientInstance
+  //     .updatePost({ tokenJWT, slug, updatedArticle })
+  //     .then((responseBody) => {
+  //       console.log('responseBody', responseBody)
+  //       dispatch(saveUpdatePost(responseBody))
+  //     })
+  //     .catch((getPostsListError) => {
+  //       dispatch(savePostsListError(getPostsListError.message))
+  //     })
+  // }
 )
 
 export const asyncDeletePost = createAsyncThunk(
@@ -195,11 +253,12 @@ export const asyncRequestPost = createAsyncThunk(
   ({ apiClientInstance, slug }, { dispatch }) => {
     apiClientInstance
       .getPost(slug)
-      .then(({ article }) => {
-        dispatch(savePost(article))
+      .then((responseBody) => {
+        // console.log('responseBody', responseBody)
+        dispatch(savePost(responseBody.article))
       })
       .catch((getPostError) => {
-        dispatch(savePostError(getPostError.message))
+        dispatch(savePostsListError(getPostError.message))
       })
   }
 )
@@ -242,11 +301,10 @@ export const {
   pageChange,
   saveUpdatePost,
   saveNewPost,
-  setCurrentPost,
+  // setCurrentPost,
   deletePost,
   savePost,
-  savePostError,
-  resetPost,
+  // resetPost,
 } = postsListLoadState.actions
 export const postsListLoadStateReducer = postsListLoadState.reducer
 

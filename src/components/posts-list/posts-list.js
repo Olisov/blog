@@ -7,7 +7,7 @@ import classNames from 'classnames'
 
 import { shortenDescription, appContext } from '../../utilities'
 import PostHeader from '../post-header'
-import { asyncRequestPostsList, pageChange, resetPost, setCurrentPost } from '../../store/slices'
+import { asyncRequestPostsList, pageChange } from '../../store/slices'
 
 import stl from './posts-list.module.scss'
 
@@ -27,17 +27,12 @@ function PostsList() {
     dispatch(pageChange(newPage))
   }
 
-  // console.log('tokenJWT', tokenJWT)
-  // console.log('currentPost', currentPost)
-
   useEffect(() => {
-    console.log('useEffect')
+    // console.log('useEffect')
     if ((currentPage !== lastPage && postsList.length !== 5) || currentPage !== page) {
-      // if (!postsList.length || currentPage !== page) {
       dispatch(asyncRequestPostsList({ apiClientInstance, page, tokenJWT }))
       if (currentPage !== page) changeCurrentPage(page)
     }
-    // if (currentPost) dispatch(resetPost())
   }, [page, tokenJWT, postsList.length])
 
   function onClick(evt, slug) {

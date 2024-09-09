@@ -53,7 +53,7 @@ function Profile() {
       localStorage.setItem('userName', userName)
       localStorage.setItem('email', email)
       localStorage.setItem('tokenJWT', tokenJWT)
-      localStorage.setItem('avatarImg', avatarImg)
+      if (avatarImg) localStorage.setItem('avatarImg', avatarImg)
     }
   }, [userName, email, tokenJWT, avatarImg])
 
@@ -62,8 +62,9 @@ function Profile() {
 
   return (
     <form className={stl.body} onSubmit={handleSubmit(onSubmit)}>
-      {/* {!tokenJWT ? <Navigate to="/" replace /> : null} */}
       <div className={stl.title}>Edit Profile</div>
+      {loadingSpinner}
+      {errorMessage}
       <div className={stl['input-group']}>
         <div className={stl['input-label']}>Username</div>
         <input
@@ -109,13 +110,12 @@ function Profile() {
           type="password"
           className={errors.password ? classNames(stl.input, stl['incorrect-input']) : classNames(stl.input)}
           {...register('password', {
-            required: 'This field is required!',
             minLength: {
               value: 6,
               message: 'Minimum length 6 characters',
             },
             maxLength: {
-              value: 20,
+              value: 40,
               message: 'Maximum length 40 characters',
             },
           })}
@@ -139,8 +139,6 @@ function Profile() {
         />
         {errors['avatar-img'] ? <div className={stl['incorrect-message']}>{errors['avatar-img'].message}</div> : null}
       </div>
-      {loadingSpinner}
-      {errorMessage}
       <Button type="primary" htmlType="submit" block disabled={!isValid} className={stl['submit-btn']}>
         Save
       </Button>

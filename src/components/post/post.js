@@ -5,7 +5,7 @@ import { Alert, Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import Markdown from 'react-markdown'
 
-import { savePost, asyncRequestPost, resetPost } from '../../store/slices'
+import { savePost, asyncRequestPost } from '../../store/slices'
 import { appContext } from '../../utilities'
 import PostHeader from '../post-header'
 
@@ -20,14 +20,12 @@ function Post() {
   const { userName } = useSelector((state) => state.authState)
 
   useEffect(() => {
-    const idx = postsList.findIndex((article) => article.slug === slug)
-    if (idx >= 0) dispatch(savePost(postsList[idx]))
-    else dispatch(asyncRequestPost({ apiClientInstance, slug }))
-
-    // return () => {
-    //   dispatch(resetPost())
-    // }
-  }, [slug, postsList])
+    if (!currentPost) {
+      const idx = postsList.findIndex((article) => article.slug === slug)
+      if (idx >= 0) dispatch(savePost(postsList[idx]))
+      else dispatch(asyncRequestPost({ apiClientInstance, slug }))
+    }
+  }, [currentPost])
 
   // console.log('post', post.author)
   // console.log('userName', userName)

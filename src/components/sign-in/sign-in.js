@@ -47,7 +47,7 @@ function SignIn() {
     }
   }, [authErrorsList, tokenJWT])
 
-  if (tokenJWT) return <Navigate to="/" replace />
+  if (tokenJWT && !isLoading && !authRequestError) return <Navigate to="/articles" replace />
 
   if (authErrorsList.email) errors.email = { message: authErrorsList.email }
   if (authErrorsList.password) errors.password = { message: authErrorsList.password }

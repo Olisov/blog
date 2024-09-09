@@ -61,7 +61,6 @@ export default class ApiClient {
     const serverResponse = await fetch(targetUrl, optionsPost)
 
     if (!serverResponse.ok) {
-      // console.log('serverResponse', serverResponse)
       throw new Error(`Server failure, received ${serverResponse.status}`)
     }
     const serverResponseBody = await serverResponse.json()
@@ -99,17 +98,13 @@ export default class ApiClient {
       body: JSON.stringify({ article: updatedArticle }),
     }
 
-    console.log('optionsPut', optionsPut)
-
     const serverResponse = await fetch(targetUrl, optionsPut)
 
-    console.log('serverResponse', serverResponse)
     if (!serverResponse.ok) {
       throw new Error(`Server failure, received ${serverResponse.status}`)
     }
     const serverResponseBody = await serverResponse.json()
 
-    // console.log('serverResponseBody', serverResponseBody)
     return serverResponseBody
   }
 

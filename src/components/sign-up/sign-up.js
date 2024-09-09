@@ -54,12 +54,12 @@ function SignUp() {
       localStorage.setItem('userName', userName)
       localStorage.setItem('email', email)
       localStorage.setItem('tokenJWT', tokenJWT)
-      localStorage.setItem('avatarImg', avatarImg)
+      if (avatarImg) localStorage.setItem('avatarImg', avatarImg)
       reset()
     }
   }, [authErrorsList, tokenJWT])
 
-  if (tokenJWT) return <Navigate to="/" replace />
+  if (tokenJWT && !isLoading && !authRequestError) return <Navigate to="/articles" replace />
 
   if (authErrorsList.username) errors.username = { message: authErrorsList.username }
   if (authErrorsList.email) errors.email = { message: authErrorsList.email }
@@ -120,7 +120,7 @@ function SignUp() {
               message: 'Minimum length 6 characters',
             },
             maxLength: {
-              value: 20,
+              value: 40,
               message: 'Maximum length 40 characters',
             },
           })}
