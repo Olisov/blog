@@ -1,7 +1,7 @@
 /* eslint-disable react/self-closing-comp */
 import { React, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 
 import { saveUserAuthData } from '../../store/slices'
 import PageLayout from '../page-layout'
@@ -17,6 +17,10 @@ const router = createBrowserRouter([
     path: '/',
     element: <PageLayout />,
     children: [
+      {
+        path: '/',
+        element: <Navigate to="/articles" replace />,
+      },
       {
         path: '/articles',
         element: <PostsList />,
