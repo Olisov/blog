@@ -6,12 +6,14 @@ import { useNavigate } from 'react-router-dom'
 
 import { shortenDescription, appContext } from '../../utilities'
 import PostHeader from '../post-header'
-import { asyncRequestPostsList, pageChange } from '../../store/slices'
+import { asyncRequestPostsList, pageChange, resetCurrentPost } from '../../store/slices'
 
 import stl from './posts-list.module.scss'
 
 function PostsList() {
-  const { page, postsList, error, isLoading, totalPosts } = useSelector((state) => state.postsListLoadState)
+  const { page, postsList, error, isLoading, totalPosts, currentPost } = useSelector(
+    (state) => state.postsListLoadState
+  )
   const [currentPage, changeCurrentPage] = useState(page)
   const { tokenJWT, isLoading: authIsLoading, error: authError } = useSelector((state) => state.authState)
   const dispatch = useDispatch()
@@ -29,7 +31,8 @@ function PostsList() {
       dispatch(asyncRequestPostsList({ apiClientInstance, page, tokenJWT }))
       if (currentPage !== page) changeCurrentPage(page)
     }
-  }, [page, tokenJWT, postsList.length])
+    if (currentPost) dispatch(resetCurrentPost())
+  }, [page, tokenJWT, postsList.length, currentPost])
 
   function onClick(evt, slug) {
     if (evt.target.nodeName !== 'path') navigate(`/articles/${slug}`)

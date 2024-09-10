@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import { format } from 'date-fns'
 
 import { randomHash, appContext } from '../../utilities'
-import { asyncRatePost, asyncDeletePost } from '../../store/slices'
+import { asyncRatePost, asyncDeletePost, resetPostImg } from '../../store/slices'
 import defaultAva from '../../assets/default-ava.png'
 
 import stl from './post-header.module.scss'
@@ -84,7 +84,7 @@ function PostHeader(props) {
             <div className={stl.name}>{username}</div>
             <div className={stl.date}>{updatedAt ? format(new Date(updatedAt), 'MMMM d, y') : 'No date'}</div>
           </div>
-          <img className={stl['profile-img']} alt="Profile" src={image} />
+          <img className={stl['profile-img']} alt="Profile" src={image} onError={() => dispatch(resetPostImg(slug))} />
         </div>
         {editBtns ? (
           <div className={stl['btn-group']}>

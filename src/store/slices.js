@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
+// import defaultAva from '../assets/default-ava.png'
+
 const postsListLoadState = createSlice({
   name: 'postsListLoadState',
   initialState: {
@@ -38,6 +40,11 @@ const postsListLoadState = createSlice({
       postsList: state.postsList.filter((post) => post.slug !== action.payload),
     }),
     savePost: (state, action) => ({ ...state, isLoading: false, currentPost: action.payload }),
+    resetCurrentPost: (state) => ({ ...state, currentPost: null }),
+    resetPostImg: (state, action) => {
+      const corruptedPost = state.postsList.find((post) => post.slug === action.payload)
+      corruptedPost.author.image = undefined
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -84,6 +91,7 @@ const authState = createSlice({
       avatarImg: action.payload.image ? action.payload.image : undefined,
     }),
     resetUserAuthData: (state) => ({ ...state, userName: null, email: null, tokenJWT: null }),
+    resetAvatarImg: (state) => ({ ...state, avatarImg: undefined }),
     saveAuthErrorsList: (state, action) => ({ ...state, isLoading: false, authErrorsList: action.payload }),
     saveAuthRequestError: (state, action) => ({
       ...state,
@@ -258,10 +266,25 @@ export const asyncUpdateUserAuthRequest = createAsyncThunk(
   }
 )
 
-export const { savePostsList, savePostsListError, pageChange, saveUpdatePost, saveNewPost, deletePost, savePost } =
-  postsListLoadState.actions
+export const {
+  savePostsList,
+  savePostsListError,
+  pageChange,
+  saveUpdatePost,
+  saveNewPost,
+  deletePost,
+  savePost,
+  resetPostImg,
+  resetCurrentPost,
+} = postsListLoadState.actions
 export const postsListLoadStateReducer = postsListLoadState.reducer
 
-export const { saveUserAuthData, saveAuthErrorsList, saveAuthRequestError, resetUserAuthData, resetAuthErrorsList } =
-  authState.actions
+export const {
+  saveUserAuthData,
+  saveAuthErrorsList,
+  saveAuthRequestError,
+  resetUserAuthData,
+  resetAuthErrorsList,
+  resetAvatarImg,
+} = authState.actions
 export const authStateReducer = authState.reducer

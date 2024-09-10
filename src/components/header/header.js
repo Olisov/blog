@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Button } from 'antd'
 import { Link } from 'react-router-dom'
 
-import { resetUserAuthData } from '../../store/slices'
+import { resetUserAuthData, resetAvatarImg } from '../../store/slices'
 import defaultAva from '../../assets/default-ava.png'
 
 import stl from './header.module.scss'
@@ -33,7 +33,15 @@ function Header() {
       </Link>
       <Link to="/profile" className={stl.profile}>
         <span className={stl['profile-name']}>{userName}</span>
-        <img className={stl['profile-img']} alt="Profile" src={avatarImg} />
+        {/* <img className={stl['profile-img']} alt="Profile" src={avatarImg} /> */}
+        <img
+          className={stl['profile-img']}
+          alt="Profile"
+          src={avatarImg}
+          onError={() => {
+            dispatch(resetAvatarImg())
+          }}
+        />
       </Link>
       <Button className={stl.link} onClick={onLogOut}>
         Log Out
