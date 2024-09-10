@@ -1,9 +1,10 @@
 /* eslint-disable react/self-closing-comp */
-import { React, useEffect } from 'react'
+import { React, useContext, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 
-import { saveUserAuthData } from '../../store/slices'
+import { appContext } from '../../utilities'
+import { asyncUserDataRequest } from '../../store/slices'
 import PageLayout from '../page-layout'
 import PostsList from '../posts-list'
 import SignIn from '../sign-in'
@@ -12,6 +13,14 @@ import Profile from '../profile'
 import Post from '../post'
 import PostConfig from '../post-config'
 
+const profile = 'profile'
+const articles = 'articles'
+const article = 'articles/:slug'
+const editArticle = 'articles/:slug/edit'
+const createArticle = 'new-article'
+const signIn = 'sign-in'
+const signUp = 'sign-Up'
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -19,34 +28,34 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Navigate to="/articles" replace />,
+        element: <Navigate to="/articles" />,
       },
       {
-        path: '/articles',
+        path: articles,
         element: <PostsList />,
       },
       {
-        path: '/articles/:slug',
+        path: article,
         element: <Post />,
       },
       {
-        path: '/articles/:slug/edit',
+        path: editArticle,
         element: <PostConfig />,
       },
       {
-        path: '/new-article',
+        path: createArticle,
         element: <PostConfig />,
       },
       {
-        path: '/sign-in',
+        path: signIn,
         element: <SignIn />,
       },
       {
-        path: '/sign-Up',
+        path: signUp,
         element: <SignUp />,
       },
       {
-        path: '/profile',
+        path: profile,
         element: <Profile />,
       },
     ],
@@ -56,22 +65,13 @@ const router = createBrowserRouter([
 function App() {
   const { tokenJWT } = useSelector((state) => state.authState)
   const dispatch = useDispatch()
+  const apiClientInstance = useContext(appContext)
 
-  const savedUserName = localStorage.getItem('userName')
-  const savedEmail = localStorage.getItem('email')
   const savedTokenJWT = localStorage.getItem('tokenJWT')
-  const savedAvatarImg = localStorage.getItem('avatarImg')
 
   useEffect(() => {
     if (savedTokenJWT && !tokenJWT) {
-      dispatch(
-        saveUserAuthData({
-          username: savedUserName,
-          email: savedEmail,
-          token: savedTokenJWT,
-          image: savedAvatarImg,
-        })
-      )
+      dispatch(asyncUserDataRequest({ apiClientInstance, tokenJWT: savedTokenJWT }))
     }
   }, [])
 

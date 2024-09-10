@@ -39,7 +39,7 @@ function PostConfig() {
   })
 
   useEffect(() => {
-    if (slug && !currentPost) dispatch(asyncRequestPost({ apiClientInstance, slug }))
+    if (slug && !currentPost) dispatch(asyncRequestPost({ apiClientInstance, slug, tokenJWT }))
     if (currentPost && slug) changeTagsList(currentPost.tagList.map((tag) => ({ id: randomHash(), tag })))
   }, [currentPost])
 

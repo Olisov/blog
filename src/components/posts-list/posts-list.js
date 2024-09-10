@@ -13,7 +13,7 @@ import stl from './posts-list.module.scss'
 function PostsList() {
   const { page, postsList, error, isLoading, totalPosts } = useSelector((state) => state.postsListLoadState)
   const [currentPage, changeCurrentPage] = useState(page)
-  const { tokenJWT } = useSelector((state) => state.authState)
+  const { tokenJWT, isLoading: authIsLoading, error: authError } = useSelector((state) => state.authState)
   const dispatch = useDispatch()
   const apiClientInstance = useContext(appContext)
   const navigate = useNavigate()
@@ -35,8 +35,9 @@ function PostsList() {
     if (evt.target.nodeName !== 'path') navigate(`/articles/${slug}`)
   }
 
-  const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
+  const loadingSpinner = isLoading || authIsLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
   const errorMessage = error ? <Alert message={error} closable type="error" /> : null
+  const authErrorMessage = authError ? <Alert message={authError} closable type="error" /> : null
   const pagination = postsList.length ? (
     <ConfigProvider
       theme={{
@@ -93,6 +94,7 @@ function PostsList() {
     <>
       {loadingSpinner}
       {errorMessage}
+      {authErrorMessage}
       {content}
       {pagination}
     </>

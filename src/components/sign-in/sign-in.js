@@ -39,10 +39,7 @@ function SignIn() {
   useEffect(() => {
     if (Object.keys(authErrorsList).length > 0) dispatch(resetAuthErrorsList())
     if (tokenJWT) {
-      localStorage.setItem('userName', userName)
-      localStorage.setItem('email', email)
       localStorage.setItem('tokenJWT', tokenJWT)
-      localStorage.setItem('avatarImg', avatarImg)
       reset()
     }
   }, [authErrorsList, tokenJWT])

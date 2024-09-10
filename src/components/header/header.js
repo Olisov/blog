@@ -13,11 +13,7 @@ function Header() {
   const dispatch = useDispatch()
 
   function onLogOut() {
-    localStorage.removeItem('userName')
-    localStorage.removeItem('email')
     localStorage.removeItem('tokenJWT')
-    localStorage.removeItem('avatarImg')
-
     dispatch(resetUserAuthData())
   }
 

@@ -46,14 +46,11 @@ function Profile() {
     reset()
   }
 
-  if (!tokenJWT) return <Navigate to="/" replace />
+  if (!tokenJWT && !localStorage.getItem('tokenJWT')) return <Navigate to="/" replace />
 
   useEffect(() => {
     if (tokenJWT) {
-      localStorage.setItem('userName', userName)
-      localStorage.setItem('email', email)
       localStorage.setItem('tokenJWT', tokenJWT)
-      if (avatarImg) localStorage.setItem('avatarImg', avatarImg)
     }
   }, [userName, email, tokenJWT, avatarImg])
 

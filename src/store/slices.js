@@ -106,6 +106,12 @@ const authState = createSlice({
         authRequestError: null,
         authErrorsList: {},
       }))
+      .addCase(asyncUserDataRequest.pending, (state) => ({
+        ...state,
+        isLoading: true,
+        authRequestError: null,
+        authErrorsList: {},
+      }))
   },
 })
 
@@ -155,11 +161,11 @@ export const asyncUpdatePost = createAsyncThunk(
   'postsListLoadState/updatePostRequest',
   async ({ tokenJWT, slug, updatedArticle }, { rejectWithValue }) => {
     try {
-      const targetUrl = new URL(`/api/articles/${slug}`, 'https://blog.kata.academy/api/')
+      const targetUrl = new URL(`articles/${slug}`, 'https://blog.kata.academy/api/')
       const optionsPut = {
         method: 'PUT',
-        'Content-Type': 'application/json',
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Token ${tokenJWT}`,
         },
         body: JSON.stringify({ article: updatedArticle }),
@@ -194,9 +200,9 @@ export const asyncDeletePost = createAsyncThunk(
 
 export const asyncRequestPost = createAsyncThunk(
   'postsListLoadState/requestPost',
-  ({ apiClientInstance, slug }, { dispatch }) => {
+  ({ apiClientInstance, slug, tokenJWT }, { dispatch }) => {
     apiClientInstance
-      .getPost(slug)
+      .getPost({ slug, tokenJWT })
       .then((responseBody) => {
         dispatch(savePost(responseBody.article))
       })
@@ -217,6 +223,20 @@ export const asyncAuthRequest = createAsyncThunk(
         } else {
           dispatch(saveAuthErrorsList(response.errors))
         }
+      })
+      .catch((requestError) => {
+        dispatch(saveAuthRequestError(requestError.message))
+      })
+  }
+)
+
+export const asyncUserDataRequest = createAsyncThunk(
+  'authState/userDataRequest',
+  ({ apiClientInstance, tokenJWT }, { dispatch }) => {
+    apiClientInstance
+      .getUserAuthData(tokenJWT)
+      .then((response) => {
+        dispatch(saveUserAuthData(response.user))
       })
       .catch((requestError) => {
         dispatch(saveAuthRequestError(requestError.message))
