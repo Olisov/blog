@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-// import defaultAva from '../assets/default-ava.png'
-
 const postsListLoadState = createSlice({
   name: 'postsListLoadState',
   initialState: {
@@ -40,7 +38,6 @@ const postsListLoadState = createSlice({
       postsList: state.postsList.filter((post) => post.slug !== action.payload),
     }),
     savePost: (state, action) => ({ ...state, isLoading: false, currentPost: action.payload }),
-    resetCurrentPost: (state) => ({ ...state, currentPost: null }),
     resetPostImg: (state, action) => {
       const corruptedPost = state.postsList.find((post) => post.slug === action.payload)
       corruptedPost.author.image = undefined
@@ -275,7 +272,6 @@ export const {
   deletePost,
   savePost,
   resetPostImg,
-  resetCurrentPost,
 } = postsListLoadState.actions
 export const postsListLoadStateReducer = postsListLoadState.reducer
 

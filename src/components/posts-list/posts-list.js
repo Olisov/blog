@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { shortenDescription, appContext } from '../../utilities'
 import PostHeader from '../post-header'
-import { asyncRequestPostsList, pageChange, resetCurrentPost } from '../../store/slices'
+import { asyncRequestPostsList, pageChange } from '../../store/slices'
 
 import stl from './posts-list.module.scss'
 
@@ -31,7 +31,6 @@ function PostsList() {
       dispatch(asyncRequestPostsList({ apiClientInstance, page, tokenJWT }))
       if (currentPage !== page) changeCurrentPage(page)
     }
-    if (currentPost) dispatch(resetCurrentPost())
   }, [page, tokenJWT, postsList.length, currentPost])
 
   function onClick(evt, slug) {

@@ -14,9 +14,7 @@ import stl from './sign-up.module.scss'
 function SignUp() {
   const apiClientInstance = useContext(appContext)
   const dispatch = useDispatch()
-  const { isLoading, authErrorsList, authRequestError, userName, email, tokenJWT, avatarImg } = useSelector(
-    (state) => state.authState
-  )
+  const { isLoading, authErrorsList, authRequestError, tokenJWT } = useSelector((state) => state.authState)
   const {
     register,
     formState: { errors, isValid },

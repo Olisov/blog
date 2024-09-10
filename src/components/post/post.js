@@ -19,12 +19,10 @@ function Post() {
   const { userName, tokenJWT } = useSelector((state) => state.authState)
 
   useEffect(() => {
-    if (!currentPost) {
-      const idx = postsList.findIndex((article) => article.slug === slug)
-      if (idx >= 0) dispatch(savePost(postsList[idx]))
-      else dispatch(asyncRequestPost({ apiClientInstance, slug, tokenJWT }))
-    }
-  }, [currentPost])
+    const idx = postsList.findIndex((article) => article.slug === slug)
+    if (idx >= 0) dispatch(savePost(postsList[idx]))
+    else dispatch(asyncRequestPost({ apiClientInstance, slug, tokenJWT }))
+  }, [])
 
   const loadingSpinner = isLoading ? <Spin indicator={<LoadingOutlined spin />} size="large" /> : null
 

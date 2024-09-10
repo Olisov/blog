@@ -13,9 +13,7 @@ import stl from './sign-in.module.scss'
 
 function SignIn() {
   const apiClientInstance = useContext(appContext)
-  const { isLoading, authErrorsList, authRequestError, userName, email, tokenJWT, avatarImg } = useSelector(
-    (state) => state.authState
-  )
+  const { isLoading, authErrorsList, authRequestError, tokenJWT } = useSelector((state) => state.authState)
   const dispatch = useDispatch()
 
   const {
